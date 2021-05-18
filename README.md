@@ -373,3 +373,14 @@ systemds scripts/algorithms/Univar-Stats.dml -nvargs X=data/haberman.data TYPES=
 cd ..
 ```
 
+Also check for Hadoop, and spark
+
+#### Notebooks
+
+Verify that the notebooks run correctly.
+
+#### Performance suite
+
+Verify that the performance suite executes on Spark and Hadoop.
+The datasizes are 80MB, 800MB, 8GB, and 80GB.
+
