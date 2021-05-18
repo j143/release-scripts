@@ -315,3 +315,61 @@ array([[-60.],
        [-60.],
        [-60.]])
 ```
+
+### Python Tests
+
+TODO: manual python tests
+
+For example,
+
+```sh
+# this command may not work.
+spark-submit --driver-class-path SystemDS.jar test_matrix_agg_fn.py
+```
+
+
+### LICENSE and NOTICE
+
+Each artifact must contain LICENSE and NOTICE files. These files must
+reflect the contents of the artifacts. If the project dependencies
+(i.e., libraries) have changed since the last release, the LICENSE and
+NOTICE files to be updated to reflect these changes.
+
+For more information, see:
+
+1. http://www.apache.org/dev/#releases
+2. http://www.apache.org/dev/licensing-howto.html
+
+### Build src artifact and verify
+
+The project should also be built using the `src` (tgz and zip).
+
+```sh
+tar -xvzf systemds-2.1.0-src.tgz
+cd systemds-2.1.0-src
+mvn clean package -P distribution
+mvn verify
+```
+
+### Single node standalone
+
+The standalone `tgz` and `zip` artifacts contain `systemds` files.
+Verify that the algorithms can be run on single node using these 
+standalone distributions.
+
+Here is an example:
+
+see standalone guide of the documenation for more details.
+
+```sh
+tar -xvzf systemds-2.1.0-bin.tgz
+cd systemds-2.1.0-bin
+wget -P data/ http://archive.ics.uci.edu/ml/machine-learning-databases/haberman/haberman.data
+echo '{"rows": 306, "cols": 4, "format": "csv"}' > data/haberman.data.mtd
+echo '1,1,1,2' > data/types.csv
+echo '{"rows": 1, "cols": 4, "format": "csv"}' > data/types.csv.mtd
+
+systemds scripts/algorithms/Univar-Stats.dml -nvargs X=data/haberman.data TYPES=data/types.csv STATS=data/univarOut.mtx CONSOLE_OUTPUT=TRUE
+cd ..
+```
+
