@@ -190,4 +190,40 @@ In this directory, clone a copy of the project.
 git clone https://github.com/apache/systemds.git
 ```
 
+## Release candidate build
+
+### Checklist
+
+#### 1. All artifacts and checksums present
+
+Verify that each expected artifact is present at
+https://dist.apache.org/repos/dist/dev/systemds/ and that
+each artifact has accompanying checksums (such as .asc and .sha512)
+
+#### 2. Release candidate build
+
+The release candidate should build on Windows, OS X, and Linux. To do
+this cleanly, the following procedure can be performed.
+
+Note: Use an empty local maven repository
+
+Example:
+
+```sh
+git clone https://github.com/apache/systemds.git
+cd systemds
+git tag -l
+git checkout tags/2.1.0-rc1 -b 2.1.0-rc1
+mvn -Dmaven.repo.local=$HOME/.m2/temp-repo clean package -P distribution
+```
+
+#### 3. Test suite check
+
+The entire test suite should pass on Windows, OS X, Linux.
+
+For verification:
+
+```sh
+mvn clean verify
+```
 
