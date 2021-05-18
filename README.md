@@ -158,3 +158,36 @@ the following locations:
   - Editor caches (eg. `~/.viminfo`)
 
 
+### Install and Configure GPG
+
+Generate a public/private key pair. For example, with name and email id.
+
+```sh
+gpg --gen-key
+```
+
+Your public and private keys can verified using:
+
+```sh
+gpg --list-keys
+gpg --list-secret-keys
+```
+
+### Use a fresh SystemDS Repository
+
+Since the artifacts will be deployed publicly, use a completely fresh
+copy of the SystemDS project used only for building and deploying.
+
+Therefore, create a directory such as 
+
+```sh
+mkdir ~/systemds-release
+```
+
+In this directory, clone a copy of the project.
+
+```sh
+git clone https://github.com/apache/systemds.git
+```
+
+
