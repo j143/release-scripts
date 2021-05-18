@@ -103,3 +103,58 @@ EOF
 ## Cleaning up
 
 
+## Snapshot deployment setup
+
+#### Maven password encryption
+
+Follow the instructions at [encryption guide](https://maven.apache.org/guides/mini/guide-encryption.html)
+
+```sh
+mvn --encrypt-master-password
+```
+
+This commands produces an output as encrypted version of the password
+```output
+{jSMOWnoPFgsHVpMvz5VrIt5kRbzGpI8u+9EF1iFQyJQ=}
+```
+
+Store this password in `${user.home}/.m2/settings-security.xml`; it
+should look like
+
+```xml
+<settingsSecurity>
+  <master>{jSMOWnoPFgsHVpMvz5VrIt5kRbzGpI8u+9EF1iFQyJQ=}</master>
+</settingsSecurity>
+```
+
+Create an Encrypted version of the Apache Password
+
+```sh
+mvn --encrypt-password
+```
+
+Add a server entry to `~/.m2/settings.xml` file (create this file if
+it doesn't already exist). This server entry will have the Apache
+Snapshot ID, your Apache ID, and your encrypted password.
+
+```sh
+<settings>
+  <servers>
+    <server>
+      <id>apache.snapshots.systemds</id>
+      <username>APACHE_ID</username>
+      <password>{COQLCE6DU6GtcS5P=}</password>
+    </server>
+  </servers>
+</settings>
+```
+
+Note: editing `settings.xml` and running the above commands can still
+leave your password stored locally in plaintext. You may want to check
+the following locations:
+
+  - Shell history (eg. run `history`). Even best clear command line
+    history after encrypting the above passwords.
+  - Editor caches (eg. `~/.viminfo`)
+
+
