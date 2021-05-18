@@ -227,3 +227,91 @@ For verification:
 mvn clean verify
 ```
 
+#### 4. Execute all binary
+
+All of the binary artifacts should execute, including the ones packaged
+in other artifacts (in tgz, zip artifacts).
+
+The build artifacts should be downloaded from
+https://dist.apache.org/repos/dist/dev/systemds.
+
+They can tested as follows:
+
+For example, OS X:
+```sh
+# download artifacts
+wget -r -nH -nd -np -R 'index.html*' https://dist.apache.org/repos/dist/dev/systemds
+
+# verify that standalone tgz works
+tar -xvzf systemds-2.1.0-bin.tgz
+cd systemds-2.1.0-bin
+echo "print('I am from SystemDS')" > hello.dml
+./systemds hello.dml
+cd ..
+```
+
+Verify that standalone zip works
+
+```sh
+rm -rf systemds-2.1.0-bin
+unzip systemds-2.1.0-bin.zip
+cd systemds-2.1.0-bin
+echo "print('Trees are our friends')" > hello.dml
+./systemds hello.dml
+cd ..
+```
+
+Verify that src works
+
+```sh
+tar -xvzf systemds-2.1.0-src.tgz
+cd systemds-2.1.0-src
+mvn clean package -P distribution
+cd target/
+java -cp "./lib/*:systemds-2.1.0.jar" org.apache.sysds.api.DMLScript -s "print('hello')"
+
+java -cp "./lib/*:SystemDS.jar" org.apache.sysds.api.DMLScript -s "print('hello')"
+cd ../..
+```
+
+Verify spark batch mode
+
+```sh
+export SPARK_HOME=~/spark
+cd systemds-2.1.0-bin/target/lib
+$SPARK_HOME/bin/spark-submit systemds-2.1.0.jar -s "print('hello')" -exec hybrid_spark
+```
+
+Verify hadoop batch mode
+
+```sh
+hadoop jar systemds-2.1.0.jar -s "print('hello')"
+```
+
+Verify python artifact
+
+```sh
+# install numpy, pandas, scipy & set SPARK_HOME
+pip install numpy pandas scipy
+export SPARK_HOME=~/spark
+
+# open interactive python shell
+python
+
+import systemds as sds
+import numpy as np
+m1 = sml.matrix(np.ones((3,3)) + 2)
+m2 = sml.matrix(np.ones((3,3)) + 3)
+m2 = m1 * (m2 + m1)
+m4 = 1.0 - m2
+m4.sum(axis=1).toNumPy()
+
+```
+
+The output would be
+
+```out
+array([[-60.],
+       [-60.],
+       [-60.]])
+```
