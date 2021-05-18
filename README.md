@@ -384,3 +384,15 @@ Verify that the notebooks run correctly.
 Verify that the performance suite executes on Spark and Hadoop.
 The datasizes are 80MB, 800MB, 8GB, and 80GB.
 
+
+## Voting process
+
+Following a successful release candidate vote by  SystemDS PMC members
+on the dev mailing list, the release candidate shall be approved.
+
+## Release
+
+### Release deployment
+
+The scripts will execute the release steps. and push the changes
+to the releases.
