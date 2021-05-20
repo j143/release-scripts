@@ -1,14 +1,30 @@
 #!/bin/sh
 # Create release tags and version names
 
-mvn versions:set -DnewVersion=2.1.0
+
+mvn release:clean release:prepare
+# provide values to the prompt
+# version:
+# tag:
+# snapshot version:
+
+mvn --batch-mode -Dtag=2.1.0-rc0 release:prepare \
+                 -DreleaseVersion=2.1.0 \
+                -DdevelopmentVersion=2.1.1-SNAPSHOT
+
+# tag $VERSION-rc$RC_COUNT
+# mvn --batch-mode -Dtag=$RELEASE_TAG release:prepare \
+#                  -DreleaseVersion=$VERSION \
+#                  -DdevelopmentVersion=$SNAPSHOT_VERSION
+
+# mvn versions:set -DnewVersion=2.1.0
 # [INFO] Local aggregation root: /home/sarita/systemds
 # [INFO] Processing change of org.apache.systemds:systemds:2.1.0-SNAPSHOT -> 2.1.0
 # [INFO] Processing org.apache.systemds:systemds
 # [INFO]     Updating project org.apache.systemds:systemds
 # [INFO]         from version 2.1.0-SNAPSHOT to 2.1.0
 
-mvn versions:set-scm-tag -DnewTag=v2.1.0-rc0
+# mvn versions:set-scm-tag -DnewTag=v2.1.0-rc0
 # [INFO] --- versions-maven-plugin:2.8.1:set-scm-tag (default-cli) @ systemds ---
 # [INFO] Updating from tag HEAD > v2.1.0-rc0
 # [INFO] ------------------------------------------------------------------------
@@ -19,7 +35,8 @@ git commit -am "Preparing SystemDS release 2.1.0"
 
 echo "Creating tag v2.1.0-rc0 at present branch"
 
-git tag v2.1.0-rc0
+# do not use git tag
+# git tag v2.1.0-rc0
 
 # Create snapshot for the next release
 
