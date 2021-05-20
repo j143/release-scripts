@@ -2,7 +2,7 @@
 # Create release tags and version names
 
 
-mvn release:clean release:prepare
+# mvn release:clean release:prepare
 # provide values to the prompt
 # version:
 # tag:
@@ -29,26 +29,26 @@ mvn --batch-mode -Dtag=2.1.0-rc0 release:prepare \
 # [INFO] Updating from tag HEAD > v2.1.0-rc0
 # [INFO] ------------------------------------------------------------------------
 
-git commit -am "Preparing SystemDS release 2.1.0"
+# git commit -am "Preparing SystemDS release 2.1.0"
 # [release-prepare bef8ec754] Preparing SystemDS release 2.1.0
 #  5 files changed, 5 insertions(+), 5 deletions(-)
 
-echo "Creating tag v2.1.0-rc0 at present branch"
+# echo "Creating tag v2.1.0-rc0 at present branch"
 
 # do not use git tag
 # git tag v2.1.0-rc0
 
 # Create snapshot for the next release
 
-if ! is_dry_run; then
-  # Push changes
-  echo "git push origin $RELEASE_TAG"
-  #git push origin $RELEASE_TAG
+# if ! is_dry_run; then
+#   # Push changes
+#   echo "git push origin $RELEASE_TAG"
+#   #git push origin $RELEASE_TAG
 
-  # cd ..
-  # rm -rf systemds
-else
-  cd ..
-  mv systemds systemds.tag
-  echo "Clone with version changes and tag available as systemds.tag in the output directory."
-fi 
+#   # cd ..
+#   # rm -rf systemds
+# else
+#   cd ..
+#   mv systemds systemds.tag
+#   echo "Clone with version changes and tag available as systemds.tag in the output directory."
+# fi 
