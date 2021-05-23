@@ -2,8 +2,8 @@
 # Create release tags and version names
 
 # https://stackoverflow.com/q/59895
-# SELF=$(cd $(dirname $0) && pwd)
-# . ./release-utils.sh
+SELF=$(cd $(dirname $0) && pwd)
+. "$SELF/release-utils.sh"
 
 exit_with_usage() {
   local NAME=$(basename $0)
@@ -27,7 +27,7 @@ set -e
 set -o pipefail
 
 if [[ $@ == *"help"* ]]; then
-  printf "help is on the way \n"
+  exit_with_usage
 fi
 
 # docs related to stty 
@@ -52,6 +52,10 @@ declare -r ENCODED_ASF_PASSWORD=$(uriencode "$ASF_PASSWORD")
 # git configuration
 git config user.name "$GIT_NAME"
 git config user.email "$GIT_EMAIL"
+
+printf "$RELEASE_TAG \n"
+printf "$RELEASE_VERSION\n"
+printf "$NEXT_VERSION"
 
 mvn --batch-mode -DdryRun=true -Dtag=$RELEASE_TAG release:prepare \
                  -Dresume=false \
