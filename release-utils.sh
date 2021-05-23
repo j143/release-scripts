@@ -5,14 +5,14 @@ ASF_REPO_CONTENT="https://raw.githubusercontent.com/apache/systemds"
 
 echo "hello 0"
 
-function error {
+error() {
   echo "$*"
   exit 1
 }
 
 echo "hello 1"
 
-function read_config {
+read_config() {
   local PROMPT="$1"
   local DEFAULT="$2"
   
@@ -28,18 +28,18 @@ function read_config {
 
 echo "hello 2"
 
-function parse_version {
+parse_version() {
   grep -e '<version>.*</version>' | \
     head -n 2 | tail -n 1 | cut -d '>' -f2 | cut -d '<' -f1
 }
 
-function check_for_tag {
+check_for_tag() {
     curl -s --head --fail "$ASF_REPO/releases/tag/$1" > /dev/null
 }
 
 echo "hello 3"
 
-function get_release_info {
+get_release_info() {
   if [ -z "$GIT_BRANCH" ]; then
     # If not branch is specified, find the latest branch from repo
     GIT_BRANCH=$(git ls-remote --heads "$ASF_REPO" |
