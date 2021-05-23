@@ -1,7 +1,16 @@
 #!/bin/sh
 
-# 
-./release-utils.sh
+SELF=$(cd $(dirname $0) && pwd)
+. "$SELF/release-util.sh"
+
+# Ask for release information
+get_release_info
+
+# tag
+. "$SELF/release-tag.sh"
+
+# build
+# . "$SELF/release-build.sh"
 
 # Creates tag and push the commit.
 ./create-tag.sh

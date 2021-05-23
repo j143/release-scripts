@@ -171,5 +171,5 @@ EOF
 
 }
 
-get_release_info
+# get_release_info
 
