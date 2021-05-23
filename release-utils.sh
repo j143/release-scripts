@@ -3,6 +3,12 @@
 ASF_REPO="https://github.com/apache/systemds"
 ASF_REPO_CONTENT="https://raw.githubusercontent.com/apache/systemds"
 
+# TODO: investigate this properly
+# gpg: signing failed: Inappropriate ioctl for device
+# https://github.com/j143/systemds/issues/75
+GPG_TTY=$(tty)
+export GPG_TTY
+
 echo "hello 0"
 
 # exit with error message
