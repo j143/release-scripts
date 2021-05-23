@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+DRY_RUN=${DRY_RUN:-0}
 ASF_REPO="https://github.com/apache/systemds"
 ASF_REPO_CONTENT="https://raw.githubusercontent.com/apache/systemds"
 
@@ -175,6 +176,11 @@ EOF
   export ASF_PASSWORD
   export GPG_PASSPHRASE
 
+}
+
+is_dry_run() {
+  # By default, evaluates to false
+  [[ "$DRY_RUN" = 1 ]]
 }
 
 # get_release_info
