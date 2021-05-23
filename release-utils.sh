@@ -107,7 +107,7 @@ get_release_info() {
 
   # Check if the RC already exists, and if re-creating the RC, skip tag
   # creation
-  RELEASE_TAG="v${RELEASE_VERSION}-rc${RC_COUNT}"
+  RELEASE_TAG="${RELEASE_VERSION}-rc${RC_COUNT}"
   SKIP_TAG=0
 
   if check_for_tag "$RELEASE_TAG"; then
