@@ -5,6 +5,7 @@ ASF_REPO_CONTENT="https://raw.githubusercontent.com/apache/systemds"
 
 echo "hello 0"
 
+# exit with error message
 error() {
   echo "$*"
   exit 1
@@ -12,6 +13,7 @@ error() {
 
 echo "hello 1"
 
+# Read the configuration
 read_config() {
   local PROMPT="$1"
   local DEFAULT="$2"
@@ -28,17 +30,23 @@ read_config() {
 
 echo "hello 2"
 
+# parse version number from pom.xml
+# <version> tag.
 parse_version() {
   grep -e '<version>.*</version>' | \
     head -n 2 | tail -n 1 | cut -d '>' -f2 | cut -d '<' -f1
 }
 
+# check for the tag name in git repo
 check_for_tag() {
     curl -s --head --fail "$ASF_REPO/releases/tag/$1" > /dev/null
 }
 
 echo "hello 3"
 
+# get the release info including
+# branch details, snapshot version
+# error validation
 get_release_info() {
   if [ -z "$GIT_BRANCH" ]; then
     # If not branch is specified, find the latest branch from repo
