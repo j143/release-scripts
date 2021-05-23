@@ -7,13 +7,14 @@ SELF=$(cd $(dirname $0) && pwd)
 get_release_info
 
 
-# build
-. "$SELF/release-build.sh" publish-snapshot
-
 # tag
 . "$SELF/create-tag.sh"
 
+# build
+. "$SELF/release-build.sh" publish-snapshot
+
+git checkout $RELEASE_TAG
+printf "checking out $RELEASE_TAG for building artifacts"
+
 . "$SELF/release-build.sh" publish-staging
-# Set Java version and build docs
-# 
 
