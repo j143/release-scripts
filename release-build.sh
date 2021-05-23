@@ -62,6 +62,10 @@ function init_java {
 
 init_java
 
+mvn deploy -DskipTests \
+  -DaltSnapshotDeploymentRepository=sonatype-nexus-snapshots::default::http://localhost:8081/repository/sonatype-nexus-snapshot
+
+
 # check maven version
 mvn -version 2>&1 | grep 'Maven home' | awk '{print $NF}'
 # /usr/local/apache-maven-3.5.4
@@ -73,7 +77,7 @@ git_hash=`git rev-parse --short HEAD`
 export GIT_HASH=$git_hash
 
 echo "Checked out SystemDS git has $git_hash"
-Checked out SystemDS git has bef8ec754
+# Checked out SystemDS git has bef8ec754
 
 cd ..
 
@@ -99,3 +103,26 @@ cd docs
 
 bundle install
 PRODUCTION=1 RELEASE_VERSION="2.1.0" bundle exec jekyll build
+
+# if [[ -z "$GPG_KEY" ]]; then
+#   echo "The environment variable $GPG_KEY is not set."
+# fi
+
+# GPG="gpg -u $GPG_KEY --no-tty --batch --pinentry-mode loopback"
+
+# RELEASE_STAGING_LOCATION="https://dist.apache.org/repos/dist/dev/systemds"
+# NEXUS_ROOT=https://repository.apache.org/service/local/staging
+
+# make_binary_release
+# 1. build with maven (java code)
+# 2. sign artifacts
+# 3. build python specific code
+# 4. sign the artifacts
+# 5. 
+
+# echo $GPG_PASSPHRASE | $GPG --passphrase-fd 0 --armour \
+#   --output $PYTHON_DIST_NAME.asc \
+#   --detach-sig $PYTHON_DIST_NAME
+
+# echo $GPG_PASSPHRASE | $GPG --passphrase-fd 0 --print-md \
+  

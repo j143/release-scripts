@@ -1,11 +1,21 @@
 #!/bin/sh
 
+# 
+./release-utils.sh
 
 # Creates tag and push the commit.
 ./create-tag.sh
 
 # Set Java version and build docs
 # 
+
+git checkout v2.1.0-rc0
+
+git_hash=`git rev-parse --short HEAD`
+
+export GIT_HASH=$git_hash
+echo "Checked out SystemDS git has $git_hash"
+
 ./release-build.sh
 # $ ./do-release.sh
 # [INFO] Scanning for projects...
