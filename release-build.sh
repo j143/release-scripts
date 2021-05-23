@@ -51,12 +51,23 @@ if [[ "$1" == "docs" ]]; then
   PRODUCTION=1 RELEASE_VERSION="2.1.0" bundle exec jekyll build
 fi
 
+GPG_OPTS="-Dgpg.keyname=$GPG_KEY -Dgpg.passphrase=$GPG_PASSPHRASE"
 
 if [[ "$1" == "publish-snapshot" ]]; then
-  cd systemds
+  
   mvn deploy -DskipTests \
-    -DaltSnapshotDeploymentRepository=sonatype-nexus-snapshots::default::http://localhost:8081/repository/sonatype-nexus-snapshot
+    -DaltSnapshotDeploymentRepository=sonatype-nexus-snapshots::default::http://localhost:8081/repository/sonatype-nexus-snapshot \
+    ${GPG_OPTS}
 
+fi
+
+
+if [[ "$1" == "publish-staging" ]]; then
+
+  mvn -P'distribution,rat' deploy \
+    -DskiptTests \
+    -DaltDeploymentRepository=github::default::https://maven.pkg.github.com/j143/systemds \
+    ${GPG_OPTS}
 fi
 
 # if [[ -z "$GPG_KEY" ]]; then

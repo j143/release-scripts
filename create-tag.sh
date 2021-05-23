@@ -57,9 +57,12 @@ printf "$RELEASE_TAG \n"
 printf "$RELEASE_VERSION\n"
 printf "$NEXT_VERSION"
 
+GPG_OPTS="-Dgpg.keyname=$GPG_KEY -Dgpg.passphrase=$GPG_PASSPHRASE"
+
 mvn --batch-mode -DdryRun=true -Dtag=$RELEASE_TAG release:prepare \
                  -Dresume=false \
                  -DreleaseVersion=$RELEASE_VERSION \
-                 -DdevelopmentVersion=$NEXT_VERSION
+                 -DdevelopmentVersion=$NEXT_VERSION \
+                 ${GPG_OPTS}
 
 

@@ -6,12 +6,14 @@ SELF=$(cd $(dirname $0) && pwd)
 # Ask for release information
 get_release_info
 
+
+# build
+. "$SELF/release-build.sh" publish-snapshot
+
 # tag
 . "$SELF/create-tag.sh"
 
-# build
-# . "$SELF/release-build.sh"
-
+. "$SELF/release-build.sh" publish-staging
 # Set Java version and build docs
 # 
 
