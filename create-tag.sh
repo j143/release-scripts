@@ -59,13 +59,7 @@ printf "$NEXT_VERSION"
 
 GPG_OPTS="-Dgpg.keyname=$GPG_KEY -Dgpg.passphrase=$GPG_PASSPHRASE"
 
-mvn --batch-mode -DdryRun=false -Dtag=$RELEASE_TAG release:prepare \
-                 -Dresume=false \
-                 -DreleaseVersion=$RELEASE_VERSION \
-                 -DdevelopmentVersion=$NEXT_VERSION \
-                 ${GPG_OPTS}
-
-
+# Tag release version before `mvn release:prepare`
 # tag python build
 # PySpark version info we use dev0 instead of SNAPSHOT to be closer
 # to PEP440.
@@ -75,3 +69,15 @@ mvn --batch-mode -DdryRun=false -Dtag=$RELEASE_TAG release:prepare \
 # docs/_config.yml
 # update SYSTEMDS_VERSION
 # and run docs/updateAPI.sh
+# sed -i".tmp1" 's/VERSION_SHORT:.*$/VERSION_SHORT: '"$NEXT_VERSION"'/g' docs/_config.yml
+
+
+mvn --batch-mode -DdryRun=false -Dtag=$RELEASE_TAG release:prepare \
+                 -Dresume=false \
+                 -DreleaseVersion=$RELEASE_VERSION \
+                 -DdevelopmentVersion=$NEXT_VERSION \
+                 ${GPG_OPTS}
+
+
+# tag snapshot version after `mvn release:prepare`
+
