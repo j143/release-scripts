@@ -66,3 +66,12 @@ mvn --batch-mode -DdryRun=false -Dtag=$RELEASE_TAG release:prepare \
                  ${GPG_OPTS}
 
 
+# tag python build
+# PySpark version info we use dev0 instead of SNAPSHOT to be closer
+# to PEP440.
+# sed -i".tmp" 's/__version__ = .*$/__version__ = "'"$NEXT_VERSION.dev0"'"/' python/systemds/version.py
+
+# change tags in docs
+# docs/_config.yml
+# update SYSTEMDS_VERSION
+# and run docs/updateAPI.sh
