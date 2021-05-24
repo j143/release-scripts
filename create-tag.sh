@@ -68,9 +68,8 @@ GPG_OPTS="-Dgpg.keyname=$GPG_KEY -Dgpg.passphrase=$GPG_PASSPHRASE"
 # change tags in docs
 # docs/_config.yml
 # update SYSTEMDS_VERSION
-# and run docs/updateAPI.sh
-# sed -i".tmp1" 's/VERSION_SHORT:.*$/VERSION_SHORT: '"$NEXT_VERSION"'/g' docs/_config.yml
-
+sed -i".tmp1" 's/SYSTEMDS_VERSION:.*$/SYSTEMDS_VERSION: '"$RELEASE_VERSION"'/g' docs/_config.yml
+# and run docs/updateAPI.sh to update version in api docs
 
 mvn --batch-mode -DdryRun=false -Dtag=$RELEASE_TAG release:prepare \
                  -Dresume=false \
@@ -81,3 +80,6 @@ mvn --batch-mode -DdryRun=false -Dtag=$RELEASE_TAG release:prepare \
 
 # tag snapshot version after `mvn release:prepare`
 
+# Change docs to dev snapshot tag
+sed -i".tmp1" 's/SYSTEMDS_VERSION:.*$/SYSTEMDS_VERSION: '"$NEXT_VERSION"'/g' docs/_config.yml
+# and run docs/updateAPI.sh to update version in api docs
