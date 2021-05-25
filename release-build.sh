@@ -61,6 +61,26 @@ if [[ "$1" == "publish-snapshot" ]]; then
 
 fi
 
+RELEASE_STAGING_LOCATION="https://dist.apache.org/repos/dist/dev/systemds"
+DEST_DIR_NAME="$PACKAGE_VERSION"
+if [[ "$1" == "publish-apache-staging" ]]; then
+
+  svn co --depth=empty $RELEASE_STAGING_LOCATION svn-systemds
+  rm -rf "svn-systemds/${DEST_DIR_NAME}"
+  mkdir -p "svn-systemds/${DEST_DIR_NAME}"
+
+  printf "Copy the release tarballs to svn repo"
+  cp systemds-* "svn-systemds/${DEST_DIR_NAME}/"
+  svn add "svn-systemds/${DEST_DIR_NAME}"
+
+fi
+
+
+
+cd svn-systemds
+svn ci --username $ASF_USERNAME --password "$ASF_PASSWORD" -m"Apache SystemDS $SYSTEMDS_PACKAGE_VERSION" --no-auth-cache
+cd ..
+rm -rf svn-systemds
 
 if [[ "$1" == "publish-staging" ]]; then
 
