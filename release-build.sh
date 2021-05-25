@@ -96,8 +96,16 @@ fi
 
 # GPG="gpg -u $GPG_KEY --no-tty --batch --pinentry-mode loopback"
 
-# RELEASE_STAGING_LOCATION="https://dist.apache.org/repos/dist/dev/systemds"
+# Publishing to Sonatype repo
 # NEXUS_ROOT=https://repository.apache.org/service/local/staging
+# NEXUS_PROFILE=1486a6e8f50cdf
+
+# printf "Creating a Nexus staging repository"
+# promote_request="<promoteRequest><data><description>Apache SystemDS</description></data></promoteRequest>"
+# out=$(curl -X POST -d "$repo_request" -u $ASF_USERNAME:$ASF_PASSWORD \
+#   -H "Content-Type:application/xml" -v \
+#   $NEXUS_ROOT/profiles/$NEXUS_PROFILE/start)
+# staged_repository_id=$(echo $out | sed -e "s/.*\(orgapachesystemds-[0-9]\{4\}\).*/\1/")
 
 # make_binary_release
 # 1. build with maven (java code)
