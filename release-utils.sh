@@ -44,6 +44,10 @@ parse_version() {
     head -n 2 | tail -n 1 | cut -d '>' -f2 | cut -d '<' -f1
 }
 
+# TODO: git clone systemds function
+# https://git-scm.com/docs/git-clean
+# git clean -d -f -x
+
 # check for the tag name in git repo
 check_for_tag() {
     curl -s --head --fail "$ASF_REPO/releases/tag/$1" > /dev/null
