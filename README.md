@@ -54,10 +54,10 @@ The release pipeline consists of the following steps:
   2. Pushes the artifacts to staging repository
   3. Scans for the vulnerabilities. Voting process.
 
-The QA team or the project community inspects the build files by 
+The project PMC and community inspects the build files by 
 downloading and testing. If it passes their requirements, they vote
 appropriately in the mailing list. The release version metadata is
-updated and the app is deployed to the public release.
+updated and the application is deployed to the public release.
 
 ## Setting up your environment
 
@@ -75,7 +75,7 @@ export TAG=v$VERSION-rc1
 2. Set the ASF credentials
 
 ```sh
-export ASF_USERNAME="janardhan@apache.org"
+export ASF_USERNAME="username@apache.org"
 export ASF_PASSWORD=""
 ```
 
@@ -83,9 +83,9 @@ export ASF_PASSWORD=""
 
 1. In the shell, build artifacts and deploy to staging
 
-## Creating signing keys
-
-Create md5 and sha512 signatures
+```sh
+./do-release.sh
+```
 
 ## Nexus repo
 
