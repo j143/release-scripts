@@ -24,6 +24,15 @@ major.minor.patch as per semver.org
 Install the basic software and procure the required code
 and dependencies, credentials.
 
+OS Requiremnt: Prefer Linux based OS or Windows Subsystem for Linux (WSL) for Windows 10.
+RAM requirement: 8 GB +
+
+Requirements:
+
+1. Apache Maven (3.8.1 or newer). [link](https://maven.apache.org/download.cgi)
+2. GnuPG [link](https://www.gnupg.org/download/index.html)
+
+
 ![diagram](./image-1.svg)
 
 All commands in this guide are run on a linux distribution
