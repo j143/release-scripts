@@ -104,6 +104,17 @@ gpg: revocation certificate stored as '/usr/local/.gnupg/openpgp-revocs.d/AD**..
 public and secret key created and signed.
 ```
 
+3. Export the environmental variable
+
+Note: Use `sudo` on requirement.
+
+```sh
+export GNUPGHOME=/usr/local/.gnupg
+
+gpg --homedir $GNUPGHOME --list-keys
+gpg --homedir $GNUPGHOME --list-secret-keys
+```
+
 
 ## Creating builds
 
@@ -216,21 +227,6 @@ the following locations:
     history after encrypting the above passwords.
   - Editor caches (eg. `~/.viminfo`)
 
-
-### Install and Configure GPG
-
-Generate a public/private key pair. For example, with name and email id.
-
-```sh
-gpg --gen-key
-```
-
-Your public and private keys can verified using:
-
-```sh
-gpg --list-keys
-gpg --list-secret-keys
-```
 
 ### Use a fresh SystemDS Repository
 

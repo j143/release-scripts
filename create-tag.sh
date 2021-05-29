@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Create release tags and version names
 
 # https://stackoverflow.com/q/59895
@@ -57,7 +57,8 @@ printf "$RELEASE_TAG \n"
 printf "$RELEASE_VERSION\n"
 printf "$NEXT_VERSION"
 
-GPG_OPTS="-Dgpg.keyname=$GPG_KEY -Dgpg.passphrase=$GPG_PASSPHRASE"
+# options available at https://maven.apache.org/plugins/maven-gpg-plugin/sign-mojo.html
+GPG_OPTS="-Dgpg.homedir=$GNUPGHOME -Dgpg.keyname=$GPG_KEY -Dgpg.passphrase=$GPG_PASSPHRASE"
 
 # Tag release version before `mvn release:prepare`
 # tag python build
