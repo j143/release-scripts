@@ -80,6 +80,31 @@ export ASF_USERNAME="username@apache.org"
 export ASF_PASSWORD=""
 ```
 
+### Generate GPG key
+
+1. Create a folder for GNUPGHOME or use default `~/.gnupg`.
+
+```sh
+sudo mkdir -m 700 /usr/local/.gnupg
+```
+
+2. Generate the gpg key
+
+```sh
+sudo GNUPGHOME=/usr/local/.gnupg gpg --gen-key
+```
+
+output will be, like the following:
+
+```
+gpg: /usr/local/.gnupg/trustdb.gpg: trustdb created
+gpg: key F164B430F91D6*** marked as ultimately trusted
+gpg: directory '/usr/local/.gnupg/openpgp-revocs.d' created
+gpg: revocation certificate stored as '/usr/local/.gnupg/openpgp-revocs.d/AD**...*.rev'
+public and secret key created and signed.
+```
+
+
 ## Creating builds
 
 1. In the shell, build artifacts and deploy to staging
