@@ -24,6 +24,15 @@ major.minor.patch as per semver.org
 Install the basic software and procure the required code
 and dependencies, credentials.
 
+OS Requiremnt: Prefer Linux based OS or Windows Subsystem for Linux (WSL) for Windows 10.
+RAM requirement: 8 GB +
+
+Requirements:
+
+1. Apache Maven (3.8.1 or newer). [link](https://maven.apache.org/download.cgi)
+2. GnuPG [link](https://www.gnupg.org/download/index.html)
+
+
 ![diagram](./image-1.svg)
 
 All commands in this guide are run on a linux distribution
@@ -45,10 +54,10 @@ The release pipeline consists of the following steps:
   2. Pushes the artifacts to staging repository
   3. Scans for the vulnerabilities. Voting process.
 
-The QA team or the project community inspects the build files by 
+The project PMC and community inspects the build files by 
 downloading and testing. If it passes their requirements, they vote
 appropriately in the mailing list. The release version metadata is
-updated and the app is deployed to the public release.
+updated and the application is deployed to the public release.
 
 ## Setting up your environment
 
@@ -66,7 +75,7 @@ export TAG=v$VERSION-rc1
 2. Set the ASF credentials
 
 ```sh
-export ASF_USERNAME="janardhan@apache.org"
+export ASF_USERNAME="username@apache.org"
 export ASF_PASSWORD=""
 ```
 
@@ -74,9 +83,9 @@ export ASF_PASSWORD=""
 
 1. In the shell, build artifacts and deploy to staging
 
-## Creating signing keys
-
-Create md5 and sha512 signatures
+```sh
+./do-release.sh
+```
 
 ## Nexus repo
 
