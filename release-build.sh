@@ -53,10 +53,18 @@ fi
 
 GPG_OPTS="-Dgpg.keyname=$GPG_KEY -Dgpg.passphrase=$GPG_PASSPHRASE"
 
+cat <<EOF >tmp-settings.xml
+<settings><servers><server>
+<id>apache.snapshots.https</id><username>$ASF_USERNAME</username>
+<password>$ASF_PASSWORD</password>
+</server></servers></settings>
+EOF
+
 if [[ "$1" == "publish-snapshot" ]]; then
   
-  mvn deploy -DskipTests \
-    -DaltSnapshotDeploymentRepository=sonatype-nexus-snapshots::default::http://localhost:8081/repository/sonatype-nexus-snapshot \
+  # -DaltSnapshotDeploymentRepository=sonatype-nexus-snapshots::default::http://localhost:8081/repository/sonatype-nexus-snapshot
+  mvn --settings tmp-settings.xml deploy -DskipTests \
+    -DaltSnapshotDeploymentRepository=github::default::https://maven.pkg.github.com/j143/systemds \
     ${GPG_OPTS}
 
 fi
@@ -73,18 +81,17 @@ if [[ "$1" == "publish-apache-staging" ]]; then
   cp systemds-* "svn-systemds/${DEST_DIR_NAME}/"
   svn add "svn-systemds/${DEST_DIR_NAME}"
 
+  cd svn-systemds
+  svn ci --username "$ASF_USERNAME" --password "$ASF_PASSWORD" -m"Apache SystemDS $SYSTEMDS_PACKAGE_VERSION" --no-auth-cache
+  cd ..
+  rm -rf svn-systemds
+
 fi
 
 
-
-cd svn-systemds
-svn ci --username $ASF_USERNAME --password "$ASF_PASSWORD" -m"Apache SystemDS $SYSTEMDS_PACKAGE_VERSION" --no-auth-cache
-cd ..
-rm -rf svn-systemds
-
 if [[ "$1" == "publish-staging" ]]; then
 
-  mvn -P'distribution,rat' deploy \
+  mvn --settings tmp-settings.xml -P'distribution,rat' deploy \
     -DskiptTests \
     -DaltDeploymentRepository=github::default::https://maven.pkg.github.com/j143/systemds \
     ${GPG_OPTS}
