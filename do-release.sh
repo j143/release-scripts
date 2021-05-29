@@ -3,6 +3,15 @@
 SELF=$(cd $(dirname $0) && pwd)
 . "$SELF/release-utils.sh"
 
+# discussion on optional arguments
+# https://stackoverflow.com/q/18414054
+while getopts ":n" opt; do
+  case $opt in
+    n) DRY_RUN=1 ;;
+    \?) error "Invalid option: $OPTARG" ;;
+  esac
+done
+
 # Ask for release information
 get_release_info
 
