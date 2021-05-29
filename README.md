@@ -3,6 +3,8 @@
 We would like to release a new version of the software
 from the existing development (Snapshot) version.
 
+![git workflow](./git-flow-1.svg)
+
 The versioning scheme is as follows.
 
 ### Semantic versioning
