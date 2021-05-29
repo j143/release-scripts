@@ -48,7 +48,7 @@ process.
 
 The following diagram illustrates the release pipeline
 
-![release pipeline](./image-2-pipeline.svg)
+![release pipeline](./flow-1.svg)
 
 The release pipeline consists of the following steps:
   1. Builds the artifacts (binary, zip files) with source code.
