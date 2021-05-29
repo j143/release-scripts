@@ -31,6 +31,7 @@ Requirements:
 
 1. Apache Maven (3.8.1 or newer). [link](https://maven.apache.org/download.cgi)
 2. GnuPG [link](https://www.gnupg.org/download/index.html)
+3. Install jq utility (size 1MB). [link](https://stedolan.github.io/jq/download/)
 
 
 ![diagram](./image-1.svg)
@@ -85,6 +86,30 @@ export ASF_PASSWORD=""
 
 ```sh
 ./do-release.sh
+```
+
+Answer the prompts with appropriate details as shown:
+
+```
+Branch [gh-pages]: master
+Current branch version is 2.1.0-SNAPSHOT.
+Release [2.1.0]: 
+RC # [1]: 1
+ASF user [ubuntu]: firstname
+Full name [Firstname Lastname]: 
+GPG key [firstname@apache.org]: 
+================
+Release details:
+BRANCH:     master
+VERSION:    2.1.0
+TAG:        2.1.0-rc1
+NEXT:       2.1.1-SNAPSHOT
+ASF USER:   firstname
+GPG KEY ID:    firstname@apache.org
+FULL NAME:  Firstname Lastname
+E-MAIL:     firstname@apache.org
+================
+Is this info correct [Y/n]? 
 ```
 
 ## Nexus repo
