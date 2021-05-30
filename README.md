@@ -138,7 +138,7 @@ Note: Only PMC can push to the Release repo for legal reasons.
 1. In JIRA, navigate to `SYSTEMDS > Administration > Versions`.
 2. Add a new release version.
 
-Know more about versions in JIRA at https://www.atlassian.com/agile/tutorials/versions
+Know more about versions in JIRA at https://support.atlassian.com/jira-core-cloud/docs/view-and-manage-a-projects-versions/
 
 ## Performance regressions
 
@@ -156,6 +156,15 @@ Our git workflow looks as shown in the below diagram:
 
 ![git workflow](./git-flow-1.svg)
 
+### The chosen commit for RC
+
+Release candidates are built from single commits off the development branch. Before building,
+the vversion must be set to a non SNAPSHOT/dev version.
+
+- The master branch is unchanged
+- There is a commit not on the master branch with the version adjusted
+- The RC tag points to that commit
+
 The versioning scheme is as follows.
 
 ### Semantic versioning
@@ -172,8 +181,21 @@ Semantic versioning is a formal convention for specifying compatibility. It uses
 
 major.minor.patch as per semver.org
 
+### Inform the team
+
+Mail dev@systemds.apache.org of the release tags. Along with this triage information to be provided.
+This list of pending issues will be refined and updated collaboratively.
 
 ## Creating builds
+
+### Checklist
+
+1. Release Manager's GPG key is publised to [dist.apache.org](https://dist.apache.org/repos/dist/release/systemds/KEYS)
+2. Release Manager's GPG key is configured in `git` configuration
+3. Set `JAVA_HOME` to JDK 8
+
+
+### Release build to create a release candidate
 
 1. In the shell, build artifacts and deploy to staging
 
@@ -226,6 +248,20 @@ curl "https://containeranalysis.googleapis.com/v1/projects/${PROJECT_ID}/notes/?
 EOF
 ```
 
+## Upload release candidate to PyPi
+
+1. Download python binary artifacts
+2. Deploy release candidate to PyPi
+
+## Prepare documentation
+
+### Build and verify JavaDoc
+
+- Confirm that version names are appropriate.
+
+### Build the Pydoc API reference
+
+The docs will generated in `build` directory.
 
 ## Cleaning up
 
