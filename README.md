@@ -1,7 +1,17 @@
 ## Release story
 
-We would like to release a new version of the software
-from the existing development (Snapshot) version.
+The Apache SystemDS project publishes new version of the software on a regular basis.
+
+Releases are the interface of the project with the public and most users interact with
+the project only through the released software (this is intentional!). Releases are a
+formal offering, which are publicly voted by the SystemDS community.
+
+Releases are executed by a Release Manager, who is one of the project committers.
+
+Release has legal consequences to the team. Make sure to comply with all the procedures
+outlined by the ASF via [Release Policy](https://www.apache.org/legal/release-policy.html) and
+[Release Distribution](https://infra.apache.org/release-distribution.html). Any deviations or
+compromises are to be discussed in private@ or dev@ mail list appropriately.
 
 ![git workflow](./git-flow-1.svg)
 
@@ -39,6 +49,13 @@ Requirements:
 ![diagram](./image-1.svg)
 
 All commands in this guide are run on a linux distribution
+
+- GPG passphrase
+- Apache ID and Password
+- GitHub ID and Password
+- DockerHub ID and Password (if applicable)
+- PyPi.org ID and password (if applicable)
+
 
 ## Architecture of the release pipeline
 
