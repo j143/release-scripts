@@ -134,6 +134,21 @@ gpg --homedir $GNUPGHOME --list-keys
 gpg --homedir $GNUPGHOME --list-secret-keys
 ```
 
+## Submit your GPG public key to a Public key server
+
+Use [MIT PGP Public Key Server](http://pgp.mit.edu:11371/) or [key server at `ubuntu.com`](https://keyserver.ubuntu.com/)
+at your convenience.
+
+
+## Access to Apache Nexus repository
+
+Note: Only PMC can push to the Release repo for legal reasons.
+
+1. Login with Apache Credentials
+2. Confirm access to `org.apache.systemds` by visiting https://repository.apache.org/#stagingProfiles;1486a6e8f50cdf
+3. Go to `Profile` (top right dropdown menu). Choose `User Token` from dropdown, then select `Access User Token`. Copy the Maven XML configuration block.
+4. This token will be used in `settings.xml`
+
 
 ## Creating builds
 
