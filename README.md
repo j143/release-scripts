@@ -13,23 +13,6 @@ outlined by the ASF via [Release Policy](https://www.apache.org/legal/release-po
 [Release Distribution](https://infra.apache.org/release-distribution.html). Any deviations or
 compromises are to be discussed in private@ or dev@ mail list appropriately.
 
-![git workflow](./git-flow-1.svg)
-
-The versioning scheme is as follows.
-
-### Semantic versioning
-
-Semantic versioning is a formal convention for specifying compatibility. It uses a three-part version number: **major version**; **minor version**; and **patch**.  Version numbers  convey meaning about the underlying code and what has been modified. For example, versioning could be handled as follows:
-
-| Code status  | Stage  | Rule  | Example version  |
-|---|---|---|---|
-| First release  | New product  | Start with 1.0.0  | 1.0.0  |
-| Backward compatible fix  | Patch release  | Increment the third digit  | 1.0.1  |
-| Backward compatible new feature  | Minor release  | Increment the middle digit and reset the last digit to zero  | 1.1.0  |
-| Breaking updates | Major release | Increment the first digit and reset the middle and last digits to zero | 2.0.0 |
-
-
-major.minor.patch as per semver.org
 
 ## Before you begin
 
@@ -148,6 +131,46 @@ Note: Only PMC can push to the Release repo for legal reasons.
 2. Confirm access to `org.apache.systemds` by visiting https://repository.apache.org/#stagingProfiles;1486a6e8f50cdf
 3. Go to `Profile` (top right dropdown menu). Choose `User Token` from dropdown, then select `Access User Token`. Copy the Maven XML configuration block.
 4. This token will be used in `settings.xml`
+
+
+## Add future release version to JIRA
+
+1. In JIRA, navigate to `SYSTEMDS > Administration > Versions`.
+2. Add a new release version.
+
+Know more about versions in JIRA at https://www.atlassian.com/agile/tutorials/versions
+
+## Performance regressions
+
+Investigating performance regressions is a collective effort. Regressions can happen during
+release process, but they should be investigated and fixed.
+
+Release Manger should make sure that the JIRA issues are filed for each regression and mark
+`Fix Version` to the to-be-released version.
+
+The regressions are to be informed to the dev@ mailing list, through release duration.
+
+## Release tags or branch
+
+Our git workflow looks as shown in the below diagram:
+
+![git workflow](./git-flow-1.svg)
+
+The versioning scheme is as follows.
+
+### Semantic versioning
+
+Semantic versioning is a formal convention for specifying compatibility. It uses a three-part version number: **major version**; **minor version**; and **patch**.  Version numbers  convey meaning about the underlying code and what has been modified. For example, versioning could be handled as follows:
+
+| Code status  | Stage  | Rule  | Example version  |
+|---|---|---|---|
+| First release  | New product  | Start with 1.0.0  | 1.0.0  |
+| Backward compatible fix  | Patch release  | Increment the third digit  | 1.0.1  |
+| Backward compatible new feature  | Minor release  | Increment the middle digit and reset the last digit to zero  | 1.1.0  |
+| Breaking updates | Major release | Increment the first digit and reset the middle and last digits to zero | 2.0.0 |
+
+
+major.minor.patch as per semver.org
 
 
 ## Creating builds
