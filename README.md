@@ -584,3 +584,32 @@ Update the record at https://reporter.apache.org/addrelease.html?systemds
 6. The release notes are published on GitHub at https://github.com/apache/systemds/release
 7. Release version is listed at reporter.apache.org
 
+### Announce Release
+
+Announce Released version within the project and public.
+
+#### Apache Mailing List
+
+1. Announce on the dev@ mail list that the release has been completed
+2. Announce on the user@ mail list, listing major improving and contributions
+3. Announce the release on the announce@apache.org mail list. This can only be
+  done from the `@apache.org` email address. This email has to be in plain text.
+
+#### Social media
+
+Update Wikipedia article on Apache SystemDS.
+
+## Checklist to declare the release process complete
+
+1. Release announce on the user@ mail list
+2. Release recorded in reporter.apache.org
+3. Completion declared on the dev@ mail list
+4. Update Wikipedia Apache SystemDS article
+
+## Improve the process
+
+Once the release is complete, let us retrospectively update changes and improvements
+to this guide. Help the community adapt this guide for release validation before casting their
+vote.
+
+Perhaps some steps can be simplified or require more clarification.
