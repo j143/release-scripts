@@ -1,25 +1,18 @@
 ## Release story
 
-We would like to release a new version of the software
-from the existing development (Snapshot) version.
+The Apache SystemDS project publishes new version of the software on a regular basis.
 
-![git workflow](./git-flow-1.svg)
+Releases are the interface of the project with the public and most users interact with
+the project only through the released software (this is intentional!). Releases are a
+formal offering, which are publicly voted by the SystemDS community.
 
-The versioning scheme is as follows.
+Releases are executed by a Release Manager, who is one of the project committers.
 
-### Semantic versioning
+Release has legal consequences to the team. Make sure to comply with all the procedures
+outlined by the ASF via [Release Policy](https://www.apache.org/legal/release-policy.html) and
+[Release Distribution](https://infra.apache.org/release-distribution.html). Any deviations or
+compromises are to be discussed in private@ or dev@ mail list appropriately.
 
-Semantic versioning is a formal convention for specifying compatibility. It uses a three-part version number: **major version**; **minor version**; and **patch**.  Version numbers  convey meaning about the underlying code and what has been modified. For example, versioning could be handled as follows:
-
-| Code status  | Stage  | Rule  | Example version  |
-|---|---|---|---|
-| First release  | New product  | Start with 1.0.0  | 1.0.0  |
-| Backward compatible fix  | Patch release  | Increment the third digit  | 1.0.1  |
-| Backward compatible new feature  | Minor release  | Increment the middle digit and reset the last digit to zero  | 1.1.0  |
-| Breaking updates | Major release | Increment the first digit and reset the middle and last digits to zero | 2.0.0 |
-
-
-major.minor.patch as per semver.org
 
 ## Before you begin
 
@@ -39,6 +32,13 @@ Requirements:
 ![diagram](./image-1.svg)
 
 All commands in this guide are run on a linux distribution
+
+- GPG passphrase
+- Apache ID and Password
+- GitHub ID and Password
+- DockerHub ID and Password (if applicable)
+- PyPi.org ID and password (if applicable)
+
 
 ## Architecture of the release pipeline
 
@@ -117,8 +117,85 @@ gpg --homedir $GNUPGHOME --list-keys
 gpg --homedir $GNUPGHOME --list-secret-keys
 ```
 
+## Submit your GPG public key to a Public key server
+
+Use [MIT PGP Public Key Server](http://pgp.mit.edu:11371/) or [key server at `ubuntu.com`](https://keyserver.ubuntu.com/)
+at your convenience.
+
+
+## Access to Apache Nexus repository
+
+Note: Only PMC can push to the Release repo for legal reasons.
+
+1. Login with Apache Credentials
+2. Confirm access to `org.apache.systemds` by visiting https://repository.apache.org/#stagingProfiles;1486a6e8f50cdf
+3. Go to `Profile` (top right dropdown menu). Choose `User Token` from dropdown, then select `Access User Token`. Copy the Maven XML configuration block.
+4. This token will be used in `settings.xml`
+
+
+## Add future release version to JIRA
+
+1. In JIRA, navigate to `SYSTEMDS > Administration > Versions`.
+2. Add a new release version.
+
+Know more about versions in JIRA at https://support.atlassian.com/jira-core-cloud/docs/view-and-manage-a-projects-versions/
+
+## Performance regressions
+
+Investigating performance regressions is a collective effort. Regressions can happen during
+release process, but they should be investigated and fixed.
+
+Release Manger should make sure that the JIRA issues are filed for each regression and mark
+`Fix Version` to the to-be-released version.
+
+The regressions are to be informed to the dev@ mailing list, through release duration.
+
+## Release tags or branch
+
+Our git workflow looks as shown in the below diagram:
+
+![git workflow](./git-flow-1.svg)
+
+### The chosen commit for RC
+
+Release candidates are built from single commits off the development branch. Before building,
+the vversion must be set to a non SNAPSHOT/dev version.
+
+- The master branch is unchanged
+- There is a commit not on the master branch with the version adjusted
+- The RC tag points to that commit
+
+The versioning scheme is as follows.
+
+### Semantic versioning
+
+Semantic versioning is a formal convention for specifying compatibility. It uses a three-part version number: **major version**; **minor version**; and **patch**.  Version numbers  convey meaning about the underlying code and what has been modified. For example, versioning could be handled as follows:
+
+| Code status  | Stage  | Rule  | Example version  |
+|---|---|---|---|
+| First release  | New product  | Start with 1.0.0  | 1.0.0  |
+| Backward compatible fix  | Patch release  | Increment the third digit  | 1.0.1  |
+| Backward compatible new feature  | Minor release  | Increment the middle digit and reset the last digit to zero  | 1.1.0  |
+| Breaking updates | Major release | Increment the first digit and reset the middle and last digits to zero | 2.0.0 |
+
+
+major.minor.patch as per semver.org
+
+### Inform the team
+
+Mail dev@systemds.apache.org of the release tags. Along with this triage information to be provided.
+This list of pending issues will be refined and updated collaboratively.
 
 ## Creating builds
+
+### Checklist
+
+1. Release Manager's GPG key is publised to [dist.apache.org](https://dist.apache.org/repos/dist/release/systemds/KEYS)
+2. Release Manager's GPG key is configured in `git` configuration
+3. Set `JAVA_HOME` to JDK 8
+
+
+### Release build to create a release candidate
 
 1. In the shell, build artifacts and deploy to staging
 
@@ -171,6 +248,20 @@ curl "https://containeranalysis.googleapis.com/v1/projects/${PROJECT_ID}/notes/?
 EOF
 ```
 
+## Upload release candidate to PyPi
+
+1. Download python binary artifacts
+2. Deploy release candidate to PyPi
+
+## Prepare documentation
+
+### Build and verify JavaDoc
+
+- Confirm that version names are appropriate.
+
+### Build the Pydoc API reference
+
+The docs will generated in `build` directory.
 
 ## Cleaning up
 
@@ -453,3 +544,72 @@ on the dev mailing list, the release candidate shall be approved.
 
 The scripts will execute the release steps. and push the changes
 to the releases.
+
+### Deploy artifacts to Maven Central
+
+In the [Apache Nexus Repo](https://repository.apache.org), release
+the staged artifacts to the Maven Central repository.
+
+Steps:
+1. In the `Staging Repositories` section, find the relevant release candidate entry
+2. Select `Release`
+3. Drop all the other release candidates
+
+### Deploy Python artifacts to PyPI
+
+- Use upload script.
+- Verify that the files at https://pypi.org/project/systemds/#files are correct.
+
+### Update website
+
+- Listing the release
+- Publish Python API reference, and the Java API reference
+
+### Mark the released version in JIRA
+
+1. Go to https://issues.apache.org/jira/plugins/servlet/project-config/SYSTEMDS/versions
+2. Hover over the released version and click `Release`
+
+### Recordkeeping
+
+Update the record at https://reporter.apache.org/addrelease.html?systemds
+
+### Checklist
+
+1. Maven artifacts released and indexed in the [Maven Central Repository](https://search.maven.org/search?q=g:org.apache.systemds)
+2. Source distribution available in the [release repository `/release/systemds/`](https://dist.apache.org/repos/dist/release/systemds/)
+3. Source distribution removed from the [dev repository `/dev/systemds/`](https://dist.apache.org/repos/dist/dev/systemds/)
+4. Website is completely updated (Release, API manuals)
+5. The release tag available on GitHub at https://github.com/apache/systemds/tags
+6. The release notes are published on GitHub at https://github.com/apache/systemds/release
+7. Release version is listed at reporter.apache.org
+
+### Announce Release
+
+Announce Released version within the project and public.
+
+#### Apache Mailing List
+
+1. Announce on the dev@ mail list that the release has been completed
+2. Announce on the user@ mail list, listing major improving and contributions
+3. Announce the release on the announce@apache.org mail list. This can only be
+  done from the `@apache.org` email address. This email has to be in plain text.
+
+#### Social media
+
+Update Wikipedia article on Apache SystemDS.
+
+## Checklist to declare the release process complete
+
+1. Release announce on the user@ mail list
+2. Release recorded in reporter.apache.org
+3. Completion declared on the dev@ mail list
+4. Update Wikipedia Apache SystemDS article
+
+## Improve the process
+
+Once the release is complete, let us retrospectively update changes and improvements
+to this guide. Help the community adapt this guide for release validation before casting their
+vote.
+
+Perhaps some steps can be simplified or require more clarification.
