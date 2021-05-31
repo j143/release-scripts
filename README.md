@@ -544,3 +544,43 @@ on the dev mailing list, the release candidate shall be approved.
 
 The scripts will execute the release steps. and push the changes
 to the releases.
+
+### Deploy artifacts to Maven Central
+
+In the [Apache Nexus Repo](https://repository.apache.org), release
+the staged artifacts to the Maven Central repository.
+
+Steps:
+1. In the `Staging Repositories` section, find the relevant release candidate entry
+2. Select `Release`
+3. Drop all the other release candidates
+
+### Deploy Python artifacts to PyPI
+
+- Use upload script.
+- Verify that the files at https://pypi.org/project/systemds/#files are correct.
+
+### Update website
+
+- Listing the release
+- Publish Python API reference, and the Java API reference
+
+### Mark the released version in JIRA
+
+1. Go to https://issues.apache.org/jira/plugins/servlet/project-config/SYSTEMDS/versions
+2. Hover over the released version and click `Release`
+
+### Recordkeeping
+
+Update the record at https://reporter.apache.org/addrelease.html?systemds
+
+### Checklist
+
+1. Maven artifacts released and indexed in the [Maven Central Repository](https://search.maven.org/search?q=g:org.apache.systemds)
+2. Source distribution available in the [release repository `/release/systemds/`](https://dist.apache.org/repos/dist/release/systemds/)
+3. Source distribution removed from the [dev repository `/dev/systemds/`](https://dist.apache.org/repos/dist/dev/systemds/)
+4. Website is completely updated (Release, API manuals)
+5. The release tag available on GitHub at https://github.com/apache/systemds/tags
+6. The release notes are published on GitHub at https://github.com/apache/systemds/release
+7. Release version is listed at reporter.apache.org
+
