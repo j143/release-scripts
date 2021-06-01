@@ -104,8 +104,8 @@ fi
 # GPG="gpg -u $GPG_KEY --no-tty --batch --pinentry-mode loopback"
 
 # Publishing to Sonatype repo
-# NEXUS_ROOT=https://repository.apache.org/service/local/staging
-# NEXUS_PROFILE=1486a6e8f50cdf
+NEXUS_ROOT=https://repository.apache.org/service/local/staging
+NEXUS_PROFILE=1486a6e8f50cdf
 
 # printf "Creating a Nexus staging repository"
 # promote_request="<promoteRequest><data><description>Apache SystemDS</description></data></promoteRequest>"
