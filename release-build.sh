@@ -118,14 +118,14 @@ staged_repository_id=$(echo $out | sed -e "s/.*\(orgapachesystemds-[0-9]\{4\}\).
 nexus_upload_id=$NEXUS_ROOT/deployByRepositoryId/$staged_repository_id
 printf "Upload files to $nexus_upload_id"
 
-# for file in $(find . -type f)
-# do
-#   # strip leading ./
-#   file_short=$(echo $file | sed -e "s/\.\///")
-#   dest_url="$nexus_upload_id/org/apache/systemds/$file_short"
-#   printf "Uploading $file_short"
-#   curl -u $ASF_USERNAME:$ASF_PASSWORD --upload-file $file_short $dest_url
-# done
+for file in $(find . -type f)
+do
+  # strip leading ./
+  file_short=$(echo $file | sed -e "s/\.\///")
+  dest_url="$nexus_upload_id/org/apache/systemds/$file_short"
+  printf "Uploading $file_short \n"
+  curl -u $ASF_USERNAME:$ASF_PASSWORD --upload-file $file_short $dest_url
+done
 
 # Promote the staging repository
 # promote_request="<promoteRequest><data><stagedRepositoryId>$staged_repository_id</stagedRepositoryId></data></promoteRequest>"
