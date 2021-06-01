@@ -128,11 +128,13 @@ do
 done
 
 # Promote the staging repository
-# promote_request="<promoteRequest><data><stagedRepositoryId>$staged_repository_id</stagedRepositoryId></data></promoteRequest>"
-# out=$(curl -X POST -d "$repo_request" -u $ASF_USERNAME:$ASF_PASSWORD \
-#   -H "Content-Type:application/xml" -v \
-#   $NEXUS_ROOT/profiles/$NEXUS_PROFILE/finish)
-# printf "Closed Nexus staging repository: $staged_repository_id"
+promote_request="<promoteRequest><data><stagedRepositoryId>$staged_repository_id</stagedRepositoryId></data></promoteRequest>"
+out=$(curl -X POST -d "$promote_request" -u $ASF_USERNAME:$ASF_PASSWORD \
+  -H "Content-Type:application/xml" -v \
+  $NEXUS_ROOT/profiles/$NEXUS_PROFILE/finish)
+printf "Closed Nexus staging repository: $staged_repository_id"
+
+printf "After release vote passes make sure to hit release button"
 
 # make_binary_release
 # 1. build with maven (java code)
