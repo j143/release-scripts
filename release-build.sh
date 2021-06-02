@@ -107,32 +107,34 @@ fi
 NEXUS_ROOT=https://repository.apache.org/service/local/staging
 NEXUS_PROFILE=1486a6e8f50cdf
 
-# printf "Creating a Nexus staging repository"
-# promote_request="<promoteRequest><data><description>Apache SystemDS</description></data></promoteRequest>"
-# out=$(curl -X POST -d "$repo_request" -u $ASF_USERNAME:$ASF_PASSWORD \
-#   -H "Content-Type:application/xml" -v \
-#   $NEXUS_ROOT/profiles/$NEXUS_PROFILE/start)
-# staged_repository_id=$(echo $out | sed -e "s/.*\(orgapachesystemds-[0-9]\{4\}\).*/\1/")
+printf "Creating a Nexus staging repository \n"
+promote_request="<promoteRequest><data><description>Apache SystemDS</description></data></promoteRequest>"
+out=$(curl -X POST -d "$promote_request" -u $ASF_USERNAME:$ASF_PASSWORD \
+  -H "Content-Type:application/xml" -v \
+  $NEXUS_ROOT/profiles/$NEXUS_PROFILE/start)
+staged_repository_id=$(echo $out | sed -e "s/.*\(orgapachesystemds-[0-9]\{4\}\).*/\1/")
 
-# # upload files to nexus repo
-# nexus_upload_id=$NEXUS_ROOT/deployByRepositoryId/$staged_repository_id
-# printf "Upload files to nexus_upload_id"
+# upload files to nexus repo
+nexus_upload_id=$NEXUS_ROOT/deployByRepositoryId/$staged_repository_id
+printf "Upload files to $nexus_upload_id"
 
-# for file in $(find . -type f)
-# do
-#   # strip leading ./
-#   file_short=$(echo $file | sed -e "s/\.\///")
-#   dest_url="$nexus_upload_id/org/apache/systemds/$file_short"
-#   printf "Uploading $file_short"
-#   curl -u $ASF_USERNAME:$ASF_PASSWORD --upload-file $file_short $dest_url
-# done
+for file in $(find . -type f)
+do
+  # strip leading ./
+  file_short=$(echo $file | sed -e "s/\.\///")
+  dest_url="$nexus_upload_id/org/apache/systemds/$file_short"
+  printf "Uploading $file_short \n"
+  curl -u $ASF_USERNAME:$ASF_PASSWORD --upload-file $file_short $dest_url
+done
 
 # Promote the staging repository
-# promote_request="<promoteRequest><data><stagedRepositoryId>$staged_repository_id</stagedRepositoryId></data></promoteRequest>"
-# out=$(curl -X POST -d "$repo_request" -u $ASF_USERNAME:$ASF_PASSWORD \
-#   -H "Content-Type:application/xml" -v \
-#   $NEXUS_ROOT/profiles/$NEXUS_PROFILE/finish)
-# printf "Closed Nexus staging repository: $staged_repository_id"
+promote_request="<promoteRequest><data><stagedRepositoryId>$staged_repository_id</stagedRepositoryId></data></promoteRequest>"
+out=$(curl -X POST -d "$promote_request" -u $ASF_USERNAME:$ASF_PASSWORD \
+  -H "Content-Type:application/xml" -v \
+  $NEXUS_ROOT/profiles/$NEXUS_PROFILE/finish)
+printf "Closed Nexus staging repository: $staged_repository_id"
+
+printf "After release vote passes make sure to hit release button"
 
 # make_binary_release
 # 1. build with maven (java code)
