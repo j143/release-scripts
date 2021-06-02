@@ -1,7 +1,6 @@
 ## Release story
 
 The Apache SystemDS project publishes new version of the software on a regular basis.
-
 Releases are the interface of the project with the public and most users interact with
 the project only through the released software (this is intentional!). Releases are a
 formal offering, which are publicly voted by the SystemDS community.
@@ -16,22 +15,26 @@ compromises are to be discussed in private@ or dev@ mail list appropriately.
 
 ## Before you begin
 
-Install the basic software and procure the required code
-and dependencies, credentials.
+Install the basic software and procure the required code and dependencies, credentials.
 
-OS Requiremnt: Prefer Linux based OS or Windows Subsystem for Linux (WSL) for Windows 10.
+OS Requirement: One of the following
+  a. Linux based OS
+  b. Windows Subsystem for Linux (WSL) for Windows 10.
+  c. Mac OS
+  
 RAM requirement: 8 GB +
 
-Requirements:
+Software Requirements:
 
-1. Apache Maven (3.8.1 or newer). [link](https://maven.apache.org/download.cgi)
-2. GnuPG [link](https://www.gnupg.org/download/index.html)
-3. Install jq utility (size 1MB). [link](https://stedolan.github.io/jq/download/)
+  1. Apache Maven (3.8.1 or newer). [link](https://maven.apache.org/download.cgi)
+  2. GnuPG [link](https://www.gnupg.org/download/index.html)
+  3. Install jq utility (size 1MB). [link](https://stedolan.github.io/jq/download/)
 
 
 ![diagram](./image-1.svg)
 
-All commands in this guide are run on a linux distribution
+
+Credential Requirements:
 
 - GPG passphrase
 - Apache ID and Password
@@ -45,9 +48,6 @@ All commands in this guide are run on a linux distribution
 An important part of the software development life cycle (SDLC)
 is ensuring software release follow the ASF approved processes.
 
-The flow of the process and artifact names generated in the
-process.
-
 The following diagram illustrates the release pipeline
 
 ![release pipeline](./flow-1.svg)
@@ -55,7 +55,7 @@ The following diagram illustrates the release pipeline
 The release pipeline consists of the following steps:
   1. Builds the artifacts (binary, zip files) with source code.
   2. Pushes the artifacts to staging repository
-  3. Scans for the vulnerabilities. Voting process.
+  3. Check for the vulnerabilities. Voting process.
 
 The project PMC and community inspects the build files by 
 downloading and testing. If it passes their requirements, they vote
@@ -117,157 +117,6 @@ gpg --homedir $GNUPGHOME --list-keys
 gpg --homedir $GNUPGHOME --list-secret-keys
 ```
 
-## Submit your GPG public key to a Public key server
-
-Use [MIT PGP Public Key Server](http://pgp.mit.edu:11371/) or [key server at `ubuntu.com`](https://keyserver.ubuntu.com/)
-at your convenience.
-
-
-## Access to Apache Nexus repository
-
-Note: Only PMC can push to the Release repo for legal reasons.
-
-1. Login with Apache Credentials
-2. Confirm access to `org.apache.systemds` by visiting https://repository.apache.org/#stagingProfiles;1486a6e8f50cdf
-3. Go to `Profile` (top right dropdown menu). Choose `User Token` from dropdown, then select `Access User Token`. Copy the Maven XML configuration block.
-4. This token will be used in `settings.xml`
-
-
-## Add future release version to JIRA
-
-1. In JIRA, navigate to `SYSTEMDS > Administration > Versions`.
-2. Add a new release version.
-
-Know more about versions in JIRA at https://support.atlassian.com/jira-core-cloud/docs/view-and-manage-a-projects-versions/
-
-## Performance regressions
-
-Investigating performance regressions is a collective effort. Regressions can happen during
-release process, but they should be investigated and fixed.
-
-Release Manger should make sure that the JIRA issues are filed for each regression and mark
-`Fix Version` to the to-be-released version.
-
-The regressions are to be informed to the dev@ mailing list, through release duration.
-
-## Release tags or branch
-
-Our git workflow looks as shown in the below diagram:
-
-![git workflow](./git-flow-1.svg)
-
-### The chosen commit for RC
-
-Release candidates are built from single commits off the development branch. Before building,
-the vversion must be set to a non SNAPSHOT/dev version.
-
-- The master branch is unchanged
-- There is a commit not on the master branch with the version adjusted
-- The RC tag points to that commit
-
-The versioning scheme is as follows.
-
-### Semantic versioning
-
-Semantic versioning is a formal convention for specifying compatibility. It uses a three-part version number: **major version**; **minor version**; and **patch**.  Version numbers  convey meaning about the underlying code and what has been modified. For example, versioning could be handled as follows:
-
-| Code status  | Stage  | Rule  | Example version  |
-|---|---|---|---|
-| First release  | New product  | Start with 1.0.0  | 1.0.0  |
-| Backward compatible fix  | Patch release  | Increment the third digit  | 1.0.1  |
-| Backward compatible new feature  | Minor release  | Increment the middle digit and reset the last digit to zero  | 1.1.0  |
-| Breaking updates | Major release | Increment the first digit and reset the middle and last digits to zero | 2.0.0 |
-
-
-major.minor.patch as per semver.org
-
-### Inform the team
-
-Mail dev@systemds.apache.org of the release tags. Along with this triage information to be provided.
-This list of pending issues will be refined and updated collaboratively.
-
-## Creating builds
-
-### Checklist
-
-1. Release Manager's GPG key is publised to [dist.apache.org](https://dist.apache.org/repos/dist/release/systemds/KEYS)
-2. Release Manager's GPG key is configured in `git` configuration
-3. Set `JAVA_HOME` to JDK 8
-
-
-### Release build to create a release candidate
-
-1. In the shell, build artifacts and deploy to staging
-
-```sh
-./do-release.sh
-```
-
-Answer the prompts with appropriate details as shown:
-
-```
-Branch [gh-pages]: master
-Current branch version is 2.1.0-SNAPSHOT.
-Release [2.1.0]: 
-RC # [1]: 1
-ASF user [ubuntu]: firstname
-Full name [Firstname Lastname]: 
-GPG key [firstname@apache.org]: 
-================
-Release details:
-BRANCH:     master
-VERSION:    2.1.0
-TAG:        2.1.0-rc1
-NEXT:       2.1.1-SNAPSHOT
-ASF USER:   firstname
-GPG KEY ID:    firstname@apache.org
-FULL NAME:  Firstname Lastname
-E-MAIL:     firstname@apache.org
-================
-Is this info correct [Y/n]? 
-```
-
-## Nexus repo
-
-
-```sh
-curl "https://containeranalysis.googleapis.com/v1/projects/${PROJECT_ID}/notes/?noteId=qa-note" \
-  --request "POST" \
-  --header "Content-Type: application/json" \
-  --header "Authorization: Bearer $(gcloud auth print-access-token)" \
-  --header "X-Goog-User-Project: ${PROJECT_ID}" \
-  --data-binary @- <<EOF
-    {
-      "name": "projects/${PROJECT_ID}/notes/qa-note",
-      "attestation": {
-        "hint": {
-          "human_readable_name": "QA note"
-        }
-      }
-    }
-EOF
-```
-
-## Upload release candidate to PyPi
-
-1. Download python binary artifacts
-2. Deploy release candidate to PyPi
-
-## Prepare documentation
-
-### Build and verify JavaDoc
-
-- Confirm that version names are appropriate.
-
-### Build the Pydoc API reference
-
-The docs will generated in `build` directory.
-
-## Cleaning up
-
-
-## Snapshot deployment setup
-
 #### Maven password encryption
 
 Follow the instructions at [encryption guide](https://maven.apache.org/guides/mini/guide-encryption.html)
@@ -319,6 +168,140 @@ the following locations:
   - Shell history (eg. run `history`). Even best clear command line
     history after encrypting the above passwords.
   - Editor caches (eg. `~/.viminfo`)
+
+
+## Submit your GPG public key to a Public key server
+
+Use [MIT PGP Public Key Server](http://pgp.mit.edu:11371/) or [key server at `ubuntu.com`](https://keyserver.ubuntu.com/)
+at your convenience.
+
+
+## Access to Apache Nexus repository
+
+Note: Only PMC can push to the Release repo for legal reasons.
+
+Apache Nexus repository is located at [repository.apache.org](https://repository.apache.org), it is Nexus 2.x Profession edition.
+
+1. Login with Apache Credentials
+2. Confirm access to `org.apache.systemds` by visiting https://repository.apache.org/#stagingProfiles;1486a6e8f50cdf
+3. Go to `Profile` (top right dropdown menu). Choose `User Token` from dropdown, then select `Access User Token`. Copy the Maven XML configuration block.
+4. This token will be used in `settings.xml`
+
+
+## Add future release version to JIRA
+
+1. In JIRA, navigate to `SYSTEMDS > Administration > Versions`.
+2. Add a new release version.
+
+Know more about versions in JIRA at 
+[`view-and-manage-a-projects-versions` guide](https://support.atlassian.com/jira-core-cloud/docs/view-and-manage-a-projects-versions/)
+
+## Performance regressions
+
+Investigating performance regressions is a collective effort. Regressions can happen during
+release process, but they should be investigated and fixed.
+
+Release Manger should make sure that the JIRA issues are filed for each regression and mark
+`Fix Version` to the to-be-released version.
+
+The regressions are to be informed to the dev@ mailing list, through release duration.
+
+## Release tags or branch
+
+Our git workflow looks as shown in the below diagram:
+
+![git workflow](./git-flow-1.svg)
+
+### The chosen commit for RC
+
+Release candidates are built from single commits off the development branch. Before building,
+the version must be set to a non `SNAPSHOT`/`dev` version.
+
+Here:
+- The master branch is unchanged
+- There is a commit not on the master branch with the version adjusted
+- The RC tag points to that commit
+
+The versioning scheme is as follows.
+
+### Semantic versioning
+
+Semantic versioning is a formal convention for specifying compatibility. It uses a three-part version number: **major version**; **minor version**; and **patch**.  Version numbers  convey meaning about the underlying code and what has been modified. For example, versioning could be handled as follows:
+
+| Code status  | Stage  | Rule  | Example version  |
+|---|---|---|---|
+| First release  | New product  | Start with 1.0.0  | 1.0.0  |
+| Backward compatible fix  | Patch release  | Increment the third digit  | 1.0.1  |
+| Backward compatible new feature  | Minor release  | Increment the middle digit and reset the last digit to zero  | 1.1.0  |
+| Breaking updates | Major release | Increment the first digit and reset the middle and last digits to zero | 2.0.0 |
+
+
+major.minor.patch as per [semver.org](http://semver.org)
+
+### Inform the team
+
+Mail dev@systemds.apache.org of the release tags and triage information.
+This list of pending issues will be refined and updated collaboratively.
+
+## Creating builds
+
+### Checklist
+
+1. Release Manager's GPG key is publised to [dist.apache.org](https://dist.apache.org/repos/dist/release/systemds/KEYS)
+2. Release Manager's GPG key is configured in `git` configuration
+3. Set `JAVA_HOME` to JDK 8
+
+
+### Release build to create a release candidate
+
+1. In the shell, build artifacts and deploy to staging
+
+```sh
+./do-release.sh
+```
+
+Answer the prompts with appropriate details as shown:
+
+```
+Branch [gh-pages]: master
+Current branch version is 2.1.0-SNAPSHOT.
+Release [2.1.0]: 
+RC # [1]: 1
+ASF user [ubuntu]: firstname
+Full name [Firstname Lastname]: 
+GPG key [firstname@apache.org]: 
+================
+Release details:
+BRANCH:     master
+VERSION:    2.1.0
+TAG:        2.1.0-rc1
+NEXT:       2.1.1-SNAPSHOT
+ASF USER:   firstname
+GPG KEY ID:    firstname@apache.org
+FULL NAME:  Firstname Lastname
+E-MAIL:     firstname@apache.org
+================
+Is this info correct [Y/n]? 
+```
+
+
+## Upload release candidate to PyPi
+
+1. Download python binary artifacts
+2. Deploy release candidate to PyPi
+
+## Prepare documentation
+
+### Build and verify JavaDoc
+
+- Confirm that version names are appropriate.
+
+### Build the Pydoc API reference
+
+The docs will generated in `build` directory.
+
+
+## Snapshot deployment setup
 
 
 ### Use a fresh SystemDS Repository
