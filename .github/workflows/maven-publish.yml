@@ -34,7 +34,7 @@ jobs:
         git clone https://github.com/j143/systemds
         cd systemds
         ls *
-        bash $GITHUB_WORKSPACE/do-release.sh -Y
+        bash $GITHUB_WORKSPACE/do-release.sh
       env:
         DRY_RUN: '1'
         GIT_BRANCH: 'master'
@@ -42,7 +42,7 @@ jobs:
         ASF_USERNAME: 'firstname'
         GIT_NAME: 'Firstname Lastname'
         GIT_EMAIL: 'j143+[bot]@protonmail.com'
-#         ANSWER: 'Y'
+        CORRECT_RELEASE_INFO: '1'
 
 #     - name: Build with Maven
 #       run: mvn -B package --file pom.xml
