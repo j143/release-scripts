@@ -165,7 +165,7 @@ EOF
     CORRECT_RELEASE_INFO=$(read_config "Is the release info correct (1 for Yes, 0 for No) ?" "$CORRECT_RELEASE_INFO")
   fi
   
-  if ! CORRECT_RELEASE_INFO; then
+  if [[ ! $CORRECT_RELEASE_INFO = '1' ]]; then
     echo "Exiting."
     exit 1
   fi
