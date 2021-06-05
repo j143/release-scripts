@@ -80,7 +80,7 @@ else
   dry_run=true
 fi
 
-printf "$dry_run"
+printf "Dry Run?: $dry_run \n"
 
 mvn --batch-mode -DdryRun="${dry_run}" -Dtag=$RELEASE_TAG release:prepare \
                  -Dresume=false \
