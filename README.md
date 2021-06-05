@@ -165,8 +165,6 @@ Apache Nexus repository is located at [repository.apache.org](https://repository
 
 1. Login with Apache Credentials
 2. Confirm access to `org.apache.systemds` by visiting https://repository.apache.org/#stagingProfiles;1486a6e8f50cdf
-3. Go to `Profile` (top right dropdown menu). Choose `User Token` from dropdown, then select `Access User Token`. Copy the Maven XML configuration block.
-4. This token will be used in `settings.xml`
 
 
 ## Add future release version to JIRA
