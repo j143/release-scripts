@@ -9,6 +9,7 @@ exit_with_usage() {
   local NAME=$(basename $0)
   cat << EOF
 usage: $NAME
+
 Tags a SystemDS release on a particular branch.
 Inputs are specified with the following environment variables:
 ASF_USERNAME - Apache Username

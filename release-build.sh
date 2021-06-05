@@ -4,11 +4,14 @@ exit_with_usage() {
 
   cat << EOF
 usage: release-details.sh <package|docs>
+
 Create build deliverables from a commit
 Top level targets are
   - package: create binary packages and commit them
              to staging repo.
   - docs: Build docs and commit them to staging repo
+  - publish-release: Build maven artifacts and publish to Maven Release Repo
+  - publish-staging: Publish to staging repository
 
 GIT_REF - Release tag or commit to build from
 PACKAGE_VERSION - Release identifier in top level package directory (eg. 2.1.2-rc1)
@@ -22,7 +25,7 @@ EOF
 }
 
 if [ $# -eq 0 ]; then
-  echo "usage: release-details.sh <package|docs>"
+  echo "usage: release-details.sh <package|docs|publish-release|publish-staging>"
 fi
 
 error() {
@@ -36,7 +39,7 @@ fi
 
 
 if [[ $@ == *"help"* ]]; then
-  echo "help is on its way."
+  exit_with_usage
 fi
 
 dry_run=true
@@ -61,18 +64,17 @@ if [[ "$1" == "docs" ]]; then
   PRODUCTION=1 RELEASE_VERSION="2.1.0" bundle exec jekyll build
 fi
 
-GPG_OPTS="-Dgpg.keyname=$GPG_KEY -Dgpg.passphrase=$GPG_PASSPHRASE"
+GPG_OPTS="-Dgpg.keyname=${GPG_KEY} -Dgpg.passphrase=${GPG_PASSPHRASE}"
 
 cat <<EOF >tmp-settings.xml
 <settings><servers><server>
-<id>apache.snapshots.https</id><username>$ASF_USERNAME</username>
-<password>$ASF_PASSWORD</password>
+<id>apache.snapshots.https</id><username>${ASF_USERNAME}</username>
+<password>${ASF_PASSWORD}</password>
 </server></servers></settings>
 EOF
 
 if [[ "$1" == "publish-snapshot" ]]; then
   
-  # -DaltSnapshotDeploymentRepository=sonatype-nexus-snapshots::default::http://localhost:8081/repository/sonatype-nexus-snapshot
   mvn --settings tmp-settings.xml deploy -DskipTests -DdryRun="${dry_run}" \
     -DaltSnapshotDeploymentRepository=github::default::https://maven.pkg.github.com/j143/systemds \
     ${GPG_OPTS}
@@ -173,17 +175,4 @@ if [[ "$1" == "publish-release" ]]; then
   cd ..
   exit 0
 fi
-
-# make_binary_release
-# 1. build with maven (java code)
-# 2. sign artifacts
-# 3. build python specific code
-# 4. sign the artifacts
-# 5. 
-
-# echo $GPG_PASSPHRASE | $GPG --passphrase-fd 0 --armour \
-#   --output $PYTHON_DIST_NAME.asc \
-#   --detach-sig $PYTHON_DIST_NAME
-
-# echo $GPG_PASSPHRASE | $GPG --passphrase-fd 0 --print-md \
   

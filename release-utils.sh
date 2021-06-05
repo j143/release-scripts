@@ -187,5 +187,3 @@ is_dry_run() {
   [[ "$DRY_RUN" = 1 ]]
 }
 
-# get_release_info
-

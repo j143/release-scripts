@@ -17,10 +17,10 @@ compromises are to be discussed in private@ or dev@ mail list appropriately.
 
 Install the basic software and procure the required code and dependencies, credentials.
 
-OS Requirement: One of the following
-  a. Linux based OS
-  b. Windows Subsystem for Linux (WSL) for Windows 10.
-  c. Mac OS
+OS Requirement: (One of the following)
+  1. Linux based OS
+  2. Windows Subsystem for Linux (WSL) for Windows 10.
+  3. Mac OS
   
 RAM requirement: 8 GB +
 
@@ -29,9 +29,6 @@ Software Requirements:
   1. Apache Maven (3.8.1 or newer). [link](https://maven.apache.org/download.cgi)
   2. GnuPG [link](https://www.gnupg.org/download/index.html)
   3. Install jq utility (size 1MB). [link](https://stedolan.github.io/jq/download/)
-
-
-![diagram](./image-1.svg)
 
 
 Credential Requirements:
@@ -64,23 +61,7 @@ updated and the application is deployed to the public release.
 
 ## Setting up your environment
 
-The release scripts use the following environment variables. you can
-change these values to match your requirements, but all scripts assume
-these environmental variables exist and contain a valid value.
 
-1. Set the version name and tag
-
-```sh
-export VERSION="2.1.0"
-export TAG=v$VERSION-rc1
-```
-
-2. Set the ASF credentials
-
-```sh
-export ASF_USERNAME="username@apache.org"
-export ASF_PASSWORD=""
-```
 
 ### Generate GPG key
 
