@@ -117,34 +117,62 @@ fi
 NEXUS_ROOT=https://repository.apache.org/service/local/staging
 NEXUS_PROFILE=1486a6e8f50cdf
 
-printf "Creating a Nexus staging repository \n"
-promote_request="<promoteRequest><data><description>Apache SystemDS</description></data></promoteRequest>"
-out=$(curl -X POST -d "$promote_request" -u $ASF_USERNAME:$ASF_PASSWORD \
-  -H "Content-Type:application/xml" -v \
-  $NEXUS_ROOT/profiles/$NEXUS_PROFILE/start)
-staged_repository_id=$(echo $out | sed -e "s/.*\(orgapachesystemds-[0-9]\{4\}\).*/\1/")
+if [[ "$1" == "publish-release" ]]; then
 
-# upload files to nexus repo
-nexus_upload_id=$NEXUS_ROOT/deployByRepositoryId/$staged_repository_id
-printf "Upload files to $nexus_upload_id"
+  cd systemds
+  
+  # Publishing spark to Maven Central Repo
+  prinf "Release version is ${PACKAGE_VERSION} \n"
+  
+  mvn versions:set -DnewVersion=${PACKAGE_VERSION}
 
-for file in $(find . -type f)
-do
-  # strip leading ./
-  file_short=$(echo $file | sed -e "s/\.\///")
-  dest_url="$nexus_upload_id/org/apache/systemds/$file_short"
-  printf "Uploading $file_short \n"
-  curl -u $ASF_USERNAME:$ASF_PASSWORD --upload-file $file_short $dest_url
-done
+  if ! is_dry_run; then
+    printf "Creating a Nexus staging repository \n"
+    promote_request="<promoteRequest><data><description>Apache SystemDS</description></data></promoteRequest>"
+    out=$(curl -X POST -d "$promote_request" -u $ASF_USERNAME:$ASF_PASSWORD \
+      -H "Content-Type:application/xml" -v \
+      $NEXUS_ROOT/profiles/$NEXUS_PROFILE/start)
+    staged_repository_id=$(echo $out | sed -e "s/.*\(orgapachesystemds-[0-9]\{4\}\).*/\1/")
+  fi
 
-# Promote the staging repository
-promote_request="<promoteRequest><data><stagedRepositoryId>$staged_repository_id</stagedRepositoryId></data></promoteRequest>"
-out=$(curl -X POST -d "$promote_request" -u $ASF_USERNAME:$ASF_PASSWORD \
-  -H "Content-Type:application/xml" -v \
-  $NEXUS_ROOT/profiles/$NEXUS_PROFILE/finish)
-printf "Closed Nexus staging repository: $staged_repository_id"
+  tmp_repo=$(mktemp -d systemds-repo-tmp-XXXXX)
 
-printf "After release vote passes make sure to hit release button"
+  mvn -Dmaven.repo.local=${tmp_repo} -P'distribution' -Daether.checksums.algorithms=SHA-512 clean install
+
+  pushd "${tmp_repo}/org/apache/systemds"
+
+  if ! is_dry_run; then
+    # upload files to nexus repo
+    nexus_upload_id=$NEXUS_ROOT/deployByRepositoryId/$staged_repository_id
+    printf "Upload files to $nexus_upload_id"
+
+    # Remove extra files generated
+    find . -type f | grep -v \.jar | grep -v \.pom | xargs rm
+
+    for file in $(find . -type f)
+    do
+      # strip leading ./
+      file_short=$(echo $file | sed -e "s/\.\///")
+      dest_url="$nexus_upload_id/org/apache/systemds/$file_short"
+      printf "Uploading $file_short \n"
+      curl -u $ASF_USERNAME:$ASF_PASSWORD --upload-file $file_short $dest_url
+    done
+
+    # Promote the staging repository
+    promote_request="<promoteRequest><data><stagedRepositoryId>$staged_repository_id</stagedRepositoryId></data></promoteRequest>"
+    out=$(curl -X POST -d "$promote_request" -u $ASF_USERNAME:$ASF_PASSWORD \
+      -H "Content-Type:application/xml" -v \
+      $NEXUS_ROOT/profiles/$NEXUS_PROFILE/finish)
+    printf "Closed Nexus staging repository: $staged_repository_id"
+
+    printf "After release vote passes make sure to hit release button"
+  fi
+
+  popd
+  rm -rf "${tmp_repo}"
+  cd ..
+  exit 0
+fi
 
 # make_binary_release
 # 1. build with maven (java code)
