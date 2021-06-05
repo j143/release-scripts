@@ -29,9 +29,10 @@ jobs:
    
     - name: Run invoke script
       run: |
+        cd $GITHUB_WORKSPACE
         git clone https://github.com/j143/systemds
         cd systemds
-        $GITHUB_WORKSPACE/release-scripts/do-release.sh
+        bash $GITHUB_WORKSPACE/release-scripts/do-release.sh
       env:
         DRY_RUN: '1'
 
