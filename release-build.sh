@@ -39,6 +39,16 @@ if [[ $@ == *"help"* ]]; then
   echo "help is on its way."
 fi
 
+dry_run=true
+
+if [[ ! is_dry_run ]]; then
+  dry_run=false
+else
+  dry_run=true
+fi
+
+printf "Dry Run?: $dry_run \n"
+
 
 # Build docs (production)
 if [[ "$1" == "docs" ]]; then
@@ -63,7 +73,7 @@ EOF
 if [[ "$1" == "publish-snapshot" ]]; then
   
   # -DaltSnapshotDeploymentRepository=sonatype-nexus-snapshots::default::http://localhost:8081/repository/sonatype-nexus-snapshot
-  mvn --settings tmp-settings.xml deploy -DskipTests \
+  mvn --settings tmp-settings.xml deploy -DskipTests -DdryRun="${dry_run}" \
     -DaltSnapshotDeploymentRepository=github::default::https://maven.pkg.github.com/j143/systemds \
     ${GPG_OPTS}
 
@@ -92,7 +102,7 @@ fi
 if [[ "$1" == "publish-staging" ]]; then
 
   mvn --settings tmp-settings.xml -P'distribution,rat' deploy \
-    -DskiptTests \
+    -DskiptTests -DdryRun="${dry_run}" \
     -DaltDeploymentRepository=github::default::https://maven.pkg.github.com/j143/systemds \
     ${GPG_OPTS}
 fi

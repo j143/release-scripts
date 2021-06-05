@@ -72,7 +72,17 @@ GPG_OPTS="-Dgpg.homedir=$GNUPGHOME -Dgpg.keyname=$GPG_KEY -Dgpg.passphrase=$GPG_
 # sed -i 's/SYSTEMDS_VERSION:.*$/SYSTEMDS_VERSION: '"$RELEASE_VERSION"'/g' docs/_config.yml
 # and run docs/updateAPI.sh to update version in api docs
 
-mvn --batch-mode -DdryRun=false -Dtag=$RELEASE_TAG release:prepare \
+dry_run=true
+
+if [[ ! is_dry_run ]]; then
+  dry_run=false
+else
+  dry_run=true
+fi
+
+printf "Dry Run?: $dry_run \n"
+
+mvn --batch-mode -DdryRun="${dry_run}" -Dtag=$RELEASE_TAG release:prepare \
                  -Dresume=false \
                  -DreleaseVersion=$RELEASE_VERSION \
                  -DdevelopmentVersion=$NEXT_VERSION \
