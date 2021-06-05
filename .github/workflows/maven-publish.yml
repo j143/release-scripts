@@ -31,24 +31,25 @@ jobs:
 #         settings-path: ${{ github.workspace }} # location for the settings.xml file
    
     - run: printf "JAVA_HOME = $JAVA_HOME \n"
-#     - name: Run invoke script
-#       run: |
-#         cd $GITHUB_WORKSPACE
-#         printf "$GITHUB_WORKSPACE --> github workspace\n"
-#         git clone https://github.com/j143/systemds
-#         cd systemds
-#         ls *
-#         bash $GITHUB_WORKSPACE/do-release.sh
-#       env:
-#         DRY_RUN: '1'
-#         GIT_BRANCH: 'master'
-#         RELEASE_VERSION: '2.1.0'
-#         ASF_USERNAME: 'firstname'
-#         GIT_NAME: 'Firstname Lastname'
-#         GIT_EMAIL: 'j143+[bot]@protonmail.com'
-#         CORRECT_RELEASE_INFO: '1'
-#         ASF_PASSWORD: asdf # wrong password, only to run this workflow
-#         GPG_PASSPHRASE: asdf # wrong passphrase, only to run this workflow
+    
+    - name: Run invoke script
+      run: |
+        cd $GITHUB_WORKSPACE
+        printf "$GITHUB_WORKSPACE --> github workspace\n"
+        git clone https://github.com/j143/systemds
+        cd systemds
+        ls *
+        bash $GITHUB_WORKSPACE/do-release.sh
+      env:
+        DRY_RUN: '1'
+        GIT_BRANCH: 'master'
+        RELEASE_VERSION: '2.1.0'
+        ASF_USERNAME: 'firstname'
+        GIT_NAME: 'Firstname Lastname'
+        GIT_EMAIL: 'j143+[bot]@protonmail.com'
+        CORRECT_RELEASE_INFO: '1'
+        ASF_PASSWORD: asdf # wrong password, only to run this workflow
+        GPG_PASSPHRASE: asdf # wrong passphrase, only to run this workflow
 
 #     - name: Build with Maven
 #       run: mvn -B package --file pom.xml
