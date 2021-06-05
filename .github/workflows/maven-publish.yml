@@ -34,7 +34,7 @@ jobs:
         git clone https://github.com/j143/systemds
         cd systemds
         ls *
-        echo 'Y' | bash $GITHUB_WORKSPACE/do-release.sh
+        bash $GITHUB_WORKSPACE/do-release.sh -Y
       env:
         DRY_RUN: '1'
         GIT_BRANCH: 'master'
