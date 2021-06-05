@@ -66,7 +66,7 @@ fi
 
 GPG_OPTS="-Dgpg.keyname=${GPG_KEY} -Dgpg.passphrase=${GPG_PASSPHRASE}"
 
-cat <<EOF >tmp-settings.xml
+cat <<EOF >../tmp-settings.xml
 <settings><servers><server>
 <id>apache.snapshots.https</id><username>${ASF_USERNAME}</username>
 <password>${ASF_PASSWORD}</password>
@@ -75,7 +75,7 @@ EOF
 
 if [[ "$1" == "publish-snapshot" ]]; then
   
-  mvn --settings tmp-settings.xml deploy -DskipTests -Dmaven.deploy.skip="${dry_run}" \
+  mvn --settings ../tmp-settings.xml deploy -DskipTests -Dmaven.deploy.skip="${dry_run}" \
     -DaltSnapshotDeploymentRepository=github::default::https://maven.pkg.github.com/j143/systemds \
     ${GPG_OPTS}
 
@@ -103,7 +103,7 @@ fi
 
 if [[ "$1" == "publish-staging" ]]; then
 
-  mvn --settings tmp-settings.xml -P'distribution,rat' deploy \
+  mvn --settings ../tmp-settings.xml -P'distribution,rat' deploy \
     -DskiptTests -Dmaven.deploy.skip="${dry_run}" \
     -DaltDeploymentRepository=github::default::https://maven.pkg.github.com/j143/systemds \
     ${GPG_OPTS}
