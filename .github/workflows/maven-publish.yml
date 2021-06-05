@@ -30,9 +30,11 @@ jobs:
     - name: Run invoke script
       run: |
         cd $GITHUB_WORKSPACE
+        printf "$GITHUB_WORKSPACE --> github workspace\n"
         git clone https://github.com/j143/systemds
         cd systemds
-        bash $GITHUB_WORKSPACE/release-scripts/do-release.sh
+        ls *
+        bash $GITHUB_WORKSPACE/do-release.sh
       env:
         DRY_RUN: '1'
 
