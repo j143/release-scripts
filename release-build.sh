@@ -75,7 +75,7 @@ EOF
 
 if [[ "$1" == "publish-snapshot" ]]; then
   
-  mvn --settings tmp-settings.xml deploy -DskipTests -DdryRun="${dry_run}" \
+  mvn --settings tmp-settings.xml deploy -DskipTests -Dmaven.deploy.skip="${dry_run}" \
     -DaltSnapshotDeploymentRepository=github::default::https://maven.pkg.github.com/j143/systemds \
     ${GPG_OPTS}
 
