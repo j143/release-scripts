@@ -10,7 +10,6 @@ ASF_REPO_CONTENT="https://raw.githubusercontent.com/apache/systemds"
 GPG_TTY=$(tty)
 export GPG_TTY
 
-echo "hello 0"
 
 # exit with error message
 error() {
@@ -18,7 +17,7 @@ error() {
   exit 1
 }
 
-echo "hello 1"
+printf "Dry Run?: ${DRY_RUN} (1: true, 0: false)\n"
 
 # Read the configuration
 read_config() {
@@ -35,7 +34,6 @@ read_config() {
   echo "$RETVAL"
 }
 
-echo "hello 2"
 
 # parse version number from pom.xml
 # <version> tag.
@@ -53,7 +51,6 @@ check_for_tag() {
     curl -s --head --fail "$ASF_REPO/releases/tag/$1" > /dev/null
 }
 
-echo "hello 3"
 
 # get the release info including
 # branch details, snapshot version
