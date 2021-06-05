@@ -43,6 +43,8 @@ jobs:
         GIT_NAME: 'Firstname Lastname'
         GIT_EMAIL: 'j143+[bot]@protonmail.com'
         CORRECT_RELEASE_INFO: '1'
+        ASF_PASSWORD: asdf # wrong password, only to run this workflow
+        GPG_PASSPHRASE: asdf # wrong passphrase, only to run this workflow
 
 #     - name: Build with Maven
 #       run: mvn -B package --file pom.xml
