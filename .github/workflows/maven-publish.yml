@@ -18,33 +18,37 @@ jobs:
       packages: write
 
     steps:
+    # Java setup docs:
+    # https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#installing-custom-java-package-type
     - uses: actions/checkout@v2
     - name: Set up JDK 11
       uses: actions/setup-java@v2
       with:
         java-version: '11'
         distribution: 'adopt'
-        server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
-        settings-path: ${{ github.workspace }} # location for the settings.xml file
+        java-package: 'jdk' 
+#         server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
+#         settings-path: ${{ github.workspace }} # location for the settings.xml file
    
-    - name: Run invoke script
-      run: |
-        cd $GITHUB_WORKSPACE
-        printf "$GITHUB_WORKSPACE --> github workspace\n"
-        git clone https://github.com/j143/systemds
-        cd systemds
-        ls *
-        bash $GITHUB_WORKSPACE/do-release.sh
-      env:
-        DRY_RUN: '1'
-        GIT_BRANCH: 'master'
-        RELEASE_VERSION: '2.1.0'
-        ASF_USERNAME: 'firstname'
-        GIT_NAME: 'Firstname Lastname'
-        GIT_EMAIL: 'j143+[bot]@protonmail.com'
-        CORRECT_RELEASE_INFO: '1'
-        ASF_PASSWORD: asdf # wrong password, only to run this workflow
-        GPG_PASSPHRASE: asdf # wrong passphrase, only to run this workflow
+    - run: printf "JAVA_HOME = $JAVA_HOME \n"
+#     - name: Run invoke script
+#       run: |
+#         cd $GITHUB_WORKSPACE
+#         printf "$GITHUB_WORKSPACE --> github workspace\n"
+#         git clone https://github.com/j143/systemds
+#         cd systemds
+#         ls *
+#         bash $GITHUB_WORKSPACE/do-release.sh
+#       env:
+#         DRY_RUN: '1'
+#         GIT_BRANCH: 'master'
+#         RELEASE_VERSION: '2.1.0'
+#         ASF_USERNAME: 'firstname'
+#         GIT_NAME: 'Firstname Lastname'
+#         GIT_EMAIL: 'j143+[bot]@protonmail.com'
+#         CORRECT_RELEASE_INFO: '1'
+#         ASF_PASSWORD: asdf # wrong password, only to run this workflow
+#         GPG_PASSPHRASE: asdf # wrong passphrase, only to run this workflow
 
 #     - name: Build with Maven
 #       run: mvn -B package --file pom.xml
