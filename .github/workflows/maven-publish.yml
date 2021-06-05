@@ -39,7 +39,10 @@ jobs:
         DRY_RUN: '1'
         GIT_BRANCH: 'master'
         RELEASE_VERSION: '2.1.0'
-        
+        ASF_USERNAME: 'firstname'
+        GIT_NAME: 'Firstname Lastname'
+        GIT_EMAIL: 'j143+[bot]@protonmail.com'
+        ANSWER: 'Y'
 
 #     - name: Build with Maven
 #       run: mvn -B package --file pom.xml
