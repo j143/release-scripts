@@ -83,11 +83,20 @@ fi
 
 printf "Dry Run?: $dry_run \n"
 
+
+# When using gpg-plugin in conjunction with release plugin use 
+# 
+# $ mvn release:perform -Darguments=-Dgpg.passphrase=thephrase
+#
+# since the system properties of the current maven session are
+# not propagated to the forked session automatically.
+# 
+
 mvn --batch-mode -DdryRun="${dry_run}" -Dtag=$RELEASE_TAG release:prepare \
                  -Dresume=false \
                  -DreleaseVersion=$RELEASE_VERSION \
                  -DdevelopmentVersion=$NEXT_VERSION \
-                 ${GPG_OPTS}
+                 -Darguments="${GPG_OPTS}"
 
 
 # tag snapshot version after `mvn release:prepare`
