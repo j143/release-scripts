@@ -33,6 +33,26 @@ jobs:
    
     - run: printf "JAVA_HOME = $JAVA_HOME \n"
     
+    - name: gpg key generation - transient
+      run: >
+        export GNUPGHOME="$(mktemp -d)"
+        cat >tempkey <<EOF
+          %echo Generating a basic OpenPGP key
+          Key-Type: DSA
+          Key-Length: 1024
+          Subkey-Type: ELG-E
+          Subkey-Length: 1024
+          Name-Real: J143 Bot
+          Name-Comment: with stupid passphrase
+          Name-Email: j143+[bot]@protonmail.com
+          Expire-Date: 0
+          Passphrase: asdfghjkl
+          # Do a commit here, so that we can later print "done" :-)
+          %commit
+          %echo done
+        EOF
+        gpg --batch --generate-key tempkey
+    
     - name: Run invoke script
       run: |
         cd $GITHUB_WORKSPACE
@@ -49,8 +69,8 @@ jobs:
         GIT_NAME: 'Firstname Lastname'
         GIT_EMAIL: 'j143+[bot]@protonmail.com'
         CORRECT_RELEASE_INFO: '1'
-        ASF_PASSWORD: asdf # wrong password, only to run this workflow
-        GPG_PASSPHRASE: asdf # wrong passphrase, only to run this workflow
+        ASF_PASSWORD: asdfghjkl # wrong password, only to run this workflow
+        GPG_PASSPHRASE: asdfghjkl # wrong passphrase, only to run this workflow
 
 #     - name: Build with Maven
 #       run: mvn -B package --file pom.xml
