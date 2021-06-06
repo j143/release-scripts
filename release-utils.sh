@@ -160,8 +160,12 @@ E-MAIL:     $GIT_EMAIL
 ================
 EOF
 
-  read -p "Is this info correct [Y/n]? " ANSWER
-  if [ "$ANSWER" != "Y" ]; then
+#   read -p "Is this info correct [Y/n]? " ANSWER
+  if [ -z "$CORRECT_RELEASE_INFO" ]; then
+    CORRECT_RELEASE_INFO=$(read_config "Is the release info correct (1 for Yes, 0 for No) ?" "$CORRECT_RELEASE_INFO")
+  fi
+  
+  if [[ ! "$CORRECT_RELEASE_INFO" = '1' ]]; then
     echo "Exiting."
     exit 1
   fi
