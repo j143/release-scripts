@@ -143,7 +143,10 @@ get_release_info() {
     export GIT_NAME=$(read_config "Full name" "$GIT_NAME")
   fi
 
-  export GIT_EMAIL="$ASF_USERNAME@apache.org"
+  # git configuration info
+  if [ -z "$GIT_EMAIL" ]; then
+    export GIT_EMAIL="$ASF_USERNAME@apache.org"
+  fi
   
   # GPG key configuration info
   if [ -z "$GPG_KEY" ]; then
