@@ -75,10 +75,10 @@ jobs:
         ASF_USERNAME: 'firstname'
         GIT_NAME: 'Firstname Lastname'
         GIT_EMAIL: 'j143+[bot]@protonmail.com'
-        GPG_KEY: 'j143+[bot]@protonmail.com'
+        GPG_KEY: '${{ env.GPG_KEY_ID }}'
         CORRECT_RELEASE_INFO: '1'
-        ASF_PASSWORD: asdfghjkl # wrong password, only to run this workflow
-        GPG_PASSPHRASE: asdfghjkl # wrong passphrase, only to run this workflow
+        ASF_PASSWORD: 'asdfghjkl' # wrong password, only to run this workflow
+        GPG_PASSPHRASE: 'asdfghjkl' # wrong passphrase, only to run this workflow
 
 #     - name: Build with Maven
 #       run: mvn -B package --file pom.xml
