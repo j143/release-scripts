@@ -35,7 +35,7 @@ jobs:
     
     - name: gpg key generation - transient
       run: >
-        export GNUPGHOME="$(mktemp -d)"
+        export GNUPGHOME="$(mktemp -d)";
         cat >tempkey <<EOF
           %echo Generating a basic OpenPGP key
           Key-Type: DSA
@@ -50,7 +50,7 @@ jobs:
           # Do a commit here, so that we can later print "done" :-)
           %commit
           %echo done
-        EOF
+        EOF;
         gpg --batch --generate-key tempkey
     
     - name: Run invoke script
