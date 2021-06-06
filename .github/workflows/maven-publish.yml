@@ -52,6 +52,10 @@ jobs:
         EOF
         gpg --batch --generate-key tempkey
     
+    - run: |
+        gpg --list-keys
+        GPG_KEY="$(gpg --list-keys | head -n 4 | tail -n 1 | sed 's/^ *//g')"
+    
     - name: Run invoke script
       run: |
         cd $GITHUB_WORKSPACE
@@ -67,7 +71,6 @@ jobs:
         ASF_USERNAME: 'firstname'
         GIT_NAME: 'Firstname Lastname'
         GIT_EMAIL: 'j143+[bot]@protonmail.com'
-        GPG_KEY: 'j143+[bot]@protonmail.com'
         CORRECT_RELEASE_INFO: '1'
         ASF_PASSWORD: asdfghjkl # wrong password, only to run this workflow
         GPG_PASSPHRASE: asdfghjkl # wrong passphrase, only to run this workflow
