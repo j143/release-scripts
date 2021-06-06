@@ -36,6 +36,7 @@ jobs:
     - name: gpg key generation - transient
       run: |
         export GNUPGHOME="/home/runner/.gnupg"
+        ls *
         cat >tempkey <<EOF
           %echo Generating a basic OpenPGP key
           Key-Type: DSA
@@ -65,6 +66,7 @@ jobs:
         cd systemds
         ls *
         export GNUPGHOME="/home/runner/.gnupg"
+        ls $GNUPGHOME
         bash $GITHUB_WORKSPACE/do-release.sh
       env:
         DRY_RUN: '1'
@@ -73,7 +75,7 @@ jobs:
         ASF_USERNAME: 'firstname'
         GIT_NAME: 'Firstname Lastname'
         GIT_EMAIL: 'j143+[bot]@protonmail.com'
-        GPG_KEY: '${{ env.GPG_KEY_ID }}'
+        GPG_KEY: 'j143+[bot]@protonmail.com'
         CORRECT_RELEASE_INFO: '1'
         ASF_PASSWORD: asdfghjkl # wrong password, only to run this workflow
         GPG_PASSPHRASE: asdfghjkl # wrong passphrase, only to run this workflow
