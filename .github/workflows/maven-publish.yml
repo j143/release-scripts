@@ -35,6 +35,7 @@ jobs:
     
     - name: gpg key generation - transient
       run: |
+        export GNUPGHOME="/home/runner/.gnupg"
         cat >tempkey <<EOF
           %echo Generating a basic OpenPGP key
           Key-Type: DSA
