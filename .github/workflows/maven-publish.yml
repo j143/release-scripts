@@ -64,6 +64,7 @@ jobs:
         git clone https://github.com/j143/systemds
         cd systemds
         ls *
+        export GNUPGHOME="/home/runner/.gnupg"
         bash $GITHUB_WORKSPACE/do-release.sh
       env:
         DRY_RUN: '1'
