@@ -67,6 +67,8 @@ jobs:
         ls *
         export GNUPGHOME="/home/runner/.gnupg"
         ls $GNUPGHOME
+        GPG_KEY_ID="$(gpg --list-keys | head -n 4 | tail -n 1 | sed 's/^ *//g')"
+        export GPG_KEY=$GPG_KEY_ID
         bash $GITHUB_WORKSPACE/do-release.sh
       env:
         DRY_RUN: '1'
@@ -75,7 +77,6 @@ jobs:
         ASF_USERNAME: 'firstname'
         GIT_NAME: 'Firstname Lastname'
         GIT_EMAIL: 'j143+[bot]@protonmail.com'
-        GPG_KEY: '${{ env.GPG_KEY_ID }}'
         CORRECT_RELEASE_INFO: '1'
         ASF_PASSWORD: 'asdfghjkl' # wrong password, only to run this workflow
         GPG_PASSPHRASE: 'asdfghjkl' # wrong passphrase, only to run this workflow
