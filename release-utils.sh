@@ -144,7 +144,11 @@ get_release_info() {
   fi
 
   export GIT_EMAIL="$ASF_USERNAME@apache.org"
-  export GPG_KEY=$(read_config "GPG key" "$GIT_EMAIL")
+  
+  # GPG key configuration info
+  if [ -z "$GPG_KEY" ]; then
+    export GPG_KEY=$(read_config "GPG key" "$GIT_EMAIL")
+  fi
 
   cat <<EOF
 ================
