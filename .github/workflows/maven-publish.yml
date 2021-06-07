@@ -45,7 +45,7 @@ jobs:
     - name: gpg key generation - transient
       run: |
         printf "HOME: $HOME \n"
-        export GNUPGHOME="$HOME/\.gnupg"
+        export GNUPGHOME="$HOME/.gnupg"
         ls *
         cat >tempkey <<EOF
           %echo Generating a basic OpenPGP key
