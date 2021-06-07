@@ -54,9 +54,12 @@ jobs:
         EOF
         gpg --batch --generate-key tempkey
     
-    - run: |
+    # the last eight digits of the finger print is key id
+    - name: Set the GPG key ID
+      run: |
         gpg --list-keys
-        GPG_KEY_ID="$(gpg --list-keys | head -n 4 | tail -n 1 | sed 's/^ *//g')"
+        GPG_KEY_FINGERPRINT="$(gpg --list-keys | head -n 4 | tail -n 1 | sed 's/^ *//g')"
+        GPG_KEY_ID="${GPG_KEY_FINGERPRINT: (-8)}"
     
     - name: Run invoke script
       run: |
