@@ -78,11 +78,12 @@ jobs:
         git clone https://github.com/j143/systemds
         cd systemds
         ls *
-        export GNUPGHOME="$HOME/\.gnupg"
+        export GNUPGHOME="/home/runner/.gnupg"
         ls $GNUPGHOME
         GPG_KEY_FINGERPRINT="$(gpg --list-keys | head -n 4 | tail -n 1 | sed 's/^ *//g')"
         GPG_KEY_ID="${GPG_KEY_FINGERPRINT: (-8)}"
         export GPG_KEY=$GPG_KEY_ID
+        export GNUPGHOME="\/home\/runner\/\.gnupg"
         bash $GITHUB_WORKSPACE/do-release.sh
       env:
         DRY_RUN: '1'
