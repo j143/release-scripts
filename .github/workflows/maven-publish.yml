@@ -4,6 +4,8 @@
 name: Test Release scripts with dry run
 
 on:
+  push:
+    branch: [*]
   release:
     types: [created]
     
