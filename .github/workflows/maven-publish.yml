@@ -70,7 +70,9 @@ jobs:
         ls *
         export GNUPGHOME="/home/runner/.gnupg"
         ls $GNUPGHOME
-        export GPG_KEY=${{ env.GPG_KEY_ID }}
+        GPG_KEY_FINGERPRINT="$(gpg --list-keys | head -n 4 | tail -n 1 | sed 's/^ *//g')"
+        GPG_KEY_ID="${GPG_KEY_FINGERPRINT: (-8)}"
+        export GPG_KEY=$GPG_KEY_ID
         bash $GITHUB_WORKSPACE/do-release.sh
       env:
         DRY_RUN: '1'
