@@ -35,7 +35,8 @@ jobs:
     
     - name: gpg key generation - transient
       run: |
-        export GNUPGHOME="/home/runner/.gnupg"
+        printf "HOME: $HOME \n"
+        export GNUPGHOME="$HOME/.gnupg"
         ls *
         cat >tempkey <<EOF
           %echo Generating a basic OpenPGP key
@@ -68,7 +69,7 @@ jobs:
         git clone https://github.com/j143/systemds
         cd systemds
         ls *
-        export GNUPGHOME="/home/runner/.gnupg"
+        export GNUPGHOME="$HOME/.gnupg"
         ls $GNUPGHOME
         GPG_KEY_FINGERPRINT="$(gpg --list-keys | head -n 4 | tail -n 1 | sed 's/^ *//g')"
         GPG_KEY_ID="${GPG_KEY_FINGERPRINT: (-8)}"
