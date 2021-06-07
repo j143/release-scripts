@@ -33,6 +33,35 @@ jobs:
    
     - run: printf "JAVA_HOME = $JAVA_HOME \n"
     
+    - name: gpg key generation - transient
+      run: |
+        printf "HOME: $HOME \n"
+        export GNUPGHOME="$HOME/.gnupg"
+        ls *
+        cat >tempkey <<EOF
+          %echo Generating a basic OpenPGP key
+          Key-Type: DSA
+          Key-Length: 1024
+          Subkey-Type: ELG-E
+          Subkey-Length: 1024
+          Name-Real: J143 Bot
+          Name-Comment: This is automation script
+          Name-Email: j143+[bot]@protonmail.com
+          Expire-Date: 0
+          Passphrase: asdfghjkl
+          # Do a commit here, so that we can later print "done" :-)
+          %commit
+          %echo done
+        EOF
+        gpg --batch --generate-key tempkey
+    
+    # the last eight digits of the finger print is key id
+    - name: Set the GPG key ID
+      run: |
+        gpg --list-keys
+        GPG_KEY_FINGERPRINT="$(gpg --list-keys | head -n 4 | tail -n 1 | sed 's/^ *//g')"
+        GPG_KEY_ID="${GPG_KEY_FINGERPRINT: (-8)}"
+    
     - name: Run invoke script
       run: |
         cd $GITHUB_WORKSPACE
@@ -40,6 +69,11 @@ jobs:
         git clone https://github.com/j143/systemds
         cd systemds
         ls *
+        export GNUPGHOME="$HOME/.gnupg"
+        ls $GNUPGHOME
+        GPG_KEY_FINGERPRINT="$(gpg --list-keys | head -n 4 | tail -n 1 | sed 's/^ *//g')"
+        GPG_KEY_ID="${GPG_KEY_FINGERPRINT: (-8)}"
+        export GPG_KEY=$GPG_KEY_ID
         bash $GITHUB_WORKSPACE/do-release.sh
       env:
         DRY_RUN: '1'
@@ -49,8 +83,8 @@ jobs:
         GIT_NAME: 'Firstname Lastname'
         GIT_EMAIL: 'j143+[bot]@protonmail.com'
         CORRECT_RELEASE_INFO: '1'
-        ASF_PASSWORD: asdf # wrong password, only to run this workflow
-        GPG_PASSPHRASE: asdf # wrong passphrase, only to run this workflow
+        ASF_PASSWORD: 'asdfghjkl' # wrong password, only to run this workflow
+        GPG_PASSPHRASE: 'asdfghjkl' # wrong passphrase, only to run this workflow
 
 #     - name: Build with Maven
 #       run: mvn -B package --file pom.xml
