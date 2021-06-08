@@ -106,6 +106,7 @@ if [[ "$1" == "publish-staging" ]]; then
   mvn --settings ../tmp-settings.xml -P'distribution,rat' deploy \
     -DskiptTests -Dmaven.deploy.skip="${dry_run}" \
     -DaltDeploymentRepository=github::default::https://maven.pkg.github.com/j143/systemds \
+    -Daether.checksums.algorithms=SHA-512 \
     ${GPG_OPTS}
 fi
 
