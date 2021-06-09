@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 SELF=$(cd $(dirname $0) && pwd)
 . "$SELF/release-utils.sh"
