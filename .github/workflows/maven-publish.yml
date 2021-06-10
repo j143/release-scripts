@@ -40,7 +40,7 @@ jobs:
         sudo mkdir $HOME/gnupg_home
         ls $HOME
         sudo chmod 700 $HOME/gnupg_home
-        sudo chmod 600 $HOME/gnupg_home/*
+        sudo chmod 600 $HOME/gnupg_home/gpg.conf
         export GNUPGHOME="$HOME/gnupg_home"
         ls *
         cat >tempkey <<EOF
