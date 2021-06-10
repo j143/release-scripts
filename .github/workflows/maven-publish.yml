@@ -4,6 +4,7 @@
 name: Test Release scripts with dry run
 
 on:
+  push:
   release:
     types: [created]
     
@@ -28,14 +29,21 @@ jobs:
         java-version: '8' 
         distribution: 'adopt'
         java-package: 'jdk' 
-#         server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
-#         settings-path: ${{ github.workspace }} # location for the settings.xml file
-   
+
     - run: printf "JAVA_HOME = $JAVA_HOME \n"
+    
+    - name: Cache local Maven repository
+      uses: actions/cache@v2
+      with:
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-maven-
     
     - name: gpg key generation - transient
       run: |
         printf "HOME: $HOME \n"
+        ls $HOME
         export GNUPGHOME="$HOME/.gnupg"
         ls *
         cat >tempkey <<EOF
@@ -54,7 +62,9 @@ jobs:
           %echo done
         EOF
         gpg --batch --generate-key tempkey
-    
+        sudo cp -rp $HOME/.gnupg $HOME/gnupghome
+        ls $HOME/gnupghome
+      
     # the last eight digits of the finger print is key id
     - name: Set the GPG key ID
       run: |
@@ -69,7 +79,7 @@ jobs:
         git clone https://github.com/j143/systemds
         cd systemds
         ls *
-        export GNUPGHOME="$HOME/.gnupg"
+        export GNUPGHOME="$HOME/gnupghome"
         ls $GNUPGHOME
         GPG_KEY_FINGERPRINT="$(gpg --list-keys | head -n 4 | tail -n 1 | sed 's/^ *//g')"
         GPG_KEY_ID="${GPG_KEY_FINGERPRINT: (-8)}"
