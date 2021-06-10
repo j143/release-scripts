@@ -37,11 +37,8 @@ jobs:
     - name: gpg key generation - transient
       run: |
         printf "HOME: $HOME \n"
-        sudo mkdir $HOME/gnupg_home
-        sudo chmod 700 $HOME/gnupg_home
-        sudo chmod --recursive 600 $HOME/gnupg_home
         ls $HOME
-        export GNUPGHOME="$HOME/gnupg_home"      
+        export GNUPGHOME="$HOME/.gnupg"
         ls *
         cat >tempkey <<EOF
           %echo Generating a basic OpenPGP key
@@ -59,6 +56,7 @@ jobs:
           %echo done
         EOF
         gpg --batch --generate-key tempkey
+        sudo cp -rp $HOME/.gnupg $HOME/gnupghome
       
     # the last eight digits of the finger print is key id
     - name: Set the GPG key ID
@@ -74,7 +72,7 @@ jobs:
         git clone https://github.com/j143/systemds
         cd systemds
         ls *
-        export GNUPGHOME="$HOME/gnupg_home"
+        export GNUPGHOME="$HOME/gnupghome"
         ls $GNUPGHOME
         GPG_KEY_FINGERPRINT="$(gpg --list-keys | head -n 4 | tail -n 1 | sed 's/^ *//g')"
         GPG_KEY_ID="${GPG_KEY_FINGERPRINT: (-8)}"
