@@ -40,7 +40,9 @@ jobs:
         sudo mkdir $HOME/gnupg_home
         ls $HOME
         sudo chmod 700 $HOME/gnupg_home
-        export GNUPGHOME="$HOME/gnupg_home"
+        export GNUPGHOME="$HOME/gnupg_home"      
+        find $HOME/gnupg_home -type f -exec chmod 600 {}
+        find $HOME/gnupg_home -type d -exec chmod 700 {}
         ls *
         cat >tempkey <<EOF
           %echo Generating a basic OpenPGP key
@@ -58,8 +60,7 @@ jobs:
           %echo done
         EOF
         gpg --batch --generate-key tempkey
-        sudo chmod 600 $HOME/gnupg_home/gpg.conf
-    
+      
     # the last eight digits of the finger print is key id
     - name: Set the GPG key ID
       run: |
