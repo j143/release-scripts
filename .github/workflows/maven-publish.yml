@@ -40,7 +40,6 @@ jobs:
         sudo mkdir $HOME/gnupg_home
         ls $HOME
         sudo chmod 700 $HOME/gnupg_home
-        sudo chmod 600 $HOME/gnupg_home/gpg.conf
         export GNUPGHOME="$HOME/gnupg_home"
         ls *
         cat >tempkey <<EOF
@@ -59,6 +58,7 @@ jobs:
           %echo done
         EOF
         gpg --batch --generate-key tempkey
+        sudo chmod 600 $HOME/gnupg_home/gpg.conf
     
     # the last eight digits of the finger print is key id
     - name: Set the GPG key ID
