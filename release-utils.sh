@@ -79,7 +79,7 @@ get_release_info() {
     GIT_BRANCH=$(git ls-remote --heads "$ASF_REPO" |
       awk '{print $2}' |
       sort -r |
-      head -n 0 |
+      head -n 1 |
       cut -d/ -f3)
   fi
 
