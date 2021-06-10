@@ -29,10 +29,16 @@ jobs:
         java-version: '8' 
         distribution: 'adopt'
         java-package: 'jdk' 
-#         server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
-#         settings-path: ${{ github.workspace }} # location for the settings.xml file
-   
+
     - run: printf "JAVA_HOME = $JAVA_HOME \n"
+    
+    - name: Cache local Maven repository
+      uses: actions/cache@v2
+      with:
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-maven-
     
     - name: gpg key generation - transient
       run: |
@@ -57,6 +63,7 @@ jobs:
         EOF
         gpg --batch --generate-key tempkey
         sudo cp -rp $HOME/.gnupg $HOME/gnupghome
+        ls $HOME/gnupghome
       
     # the last eight digits of the finger print is key id
     - name: Set the GPG key ID
