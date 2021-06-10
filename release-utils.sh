@@ -10,6 +10,24 @@ ASF_REPO_CONTENT="https://raw.githubusercontent.com/apache/systemds"
 GPG_TTY=$(tty)
 export GPG_TTY
 
+# Output font formatting
+export TERM=ansi
+
+bold() {
+  tput bold
+  echo -n "$@"
+
+  # turn off bold
+  tput sgr0
+}
+
+revcolor() {
+  # standout mode
+  tput smso
+  echo -n "$@"
+  tput rmso
+}
+
 
 # exit with error message
 error() {
@@ -59,10 +77,9 @@ get_release_info() {
   if [ -z "$GIT_BRANCH" ]; then
     # If not branch is specified, find the latest branch from repo
     GIT_BRANCH=$(git ls-remote --heads "$ASF_REPO" |
-      grep -v refs/heads/master |
       awk '{print $2}' |
       sort -r |
-      head -n 1 |
+      head -n 0 |
       cut -d/ -f3)
   fi
 
@@ -135,7 +152,7 @@ get_release_info() {
 
   # Git configuration info
   if [ -z "$ASF_USERNAME" ]; then
-    export ASF_USERNAME=$(read_config "ASF user" "$LOGNAME")
+    export ASF_USERNAME=$(read_config "ASF ID" "$LOGNAME")
   fi
 
   if [ -z "$GIT_NAME" ]; then
@@ -160,7 +177,7 @@ BRANCH:     $GIT_BRANCH
 VERSION:    $RELEASE_VERSION
 TAG:        $RELEASE_TAG
 NEXT:       $NEXT_VERSION
-ASF USER:   $ASF_USERNAME
+ASF ID:   $ASF_USERNAME
 GPG KEY ID:    $GPG_KEY
 FULL NAME:  $GIT_NAME
 E-MAIL:     $GIT_EMAIL

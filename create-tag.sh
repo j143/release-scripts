@@ -99,9 +99,11 @@ CMD="mvn --batch-mode -DdryRun=${dry_run} -Dtag=$RELEASE_TAG release:prepare \
                  -Dresume=false \
                  -DreleaseVersion=$RELEASE_VERSION \
                  -DdevelopmentVersion=$NEXT_VERSION \
-                 -Darguments=${GPG_OPTS} -X -Dgpg.passphrase=$GPG_PASSPHRASE"
+                 -Dgpg.keyname=${GPG_KEY} -Dgpg.passphrase=${GPG_PASSPHRASE} \
+                 -Darguments=${GPG_OPTS} \
+                 -Daether.checksums.algorithms=SHA-512"
 
-printf "Executing: $CMD \n"
+printf "\nExecuting: $(bold $CMD) \n\n"
 
 $CMD
 

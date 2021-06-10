@@ -25,7 +25,7 @@ EOF
 }
 
 if [ $# -eq 0 ]; then
-  echo "usage: release-details.sh <package|docs|publish-release|publish-staging>"
+  echo "usage: release-build.sh <package|docs|publish-release|publish-staging>"
 fi
 
 error() {
