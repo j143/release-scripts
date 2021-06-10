@@ -151,6 +151,8 @@ get_release_info() {
   export PACKAGE_VERSION="$RELEASE_TAG"
 
   # Git configuration info
+  # The ASF ID is obtained from
+  # https://people.apache.org/phonebook.html?unix=systemds
   if [ -z "$ASF_USERNAME" ]; then
     export ASF_USERNAME=$(read_config "ASF ID" "$LOGNAME")
   fi
