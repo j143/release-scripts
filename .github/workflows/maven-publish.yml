@@ -38,6 +38,8 @@ jobs:
       run: |
         printf "HOME: $HOME \n"
         sudo mkdir $HOME/gnupg_home
+        sudo chmod 700 $HOME/gnupg_home
+        sudo chmod --recursive 600 $HOME/gnupg_home
         ls $HOME
         export GNUPGHOME="$HOME/gnupg_home"      
         ls *
