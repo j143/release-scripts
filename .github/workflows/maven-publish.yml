@@ -39,10 +39,7 @@ jobs:
         printf "HOME: $HOME \n"
         sudo mkdir $HOME/gnupg_home
         ls $HOME
-        sudo chmod 700 $HOME/gnupg_home
         export GNUPGHOME="$HOME/gnupg_home"      
-        find $HOME/gnupg_home -type f -exec chmod 600 {}
-        find $HOME/gnupg_home -type d -exec chmod 700 {}
         ls *
         cat >tempkey <<EOF
           %echo Generating a basic OpenPGP key
