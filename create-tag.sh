@@ -95,12 +95,15 @@ printf "\n Dry Run?: $dry_run \n"
 # not propagated to the forked session automatically.
 # 
 
-mvn --batch-mode -DdryRun="${dry_run}" -Dtag=$RELEASE_TAG release:prepare \
+CMD=$(mvn --batch-mode -DdryRun="${dry_run}" -Dtag=$RELEASE_TAG release:prepare \
                  -Dresume=false \
                  -DreleaseVersion=$RELEASE_VERSION \
                  -DdevelopmentVersion=$NEXT_VERSION \
-                 -Darguments="${GPG_OPTS}"
+                 -Darguments="${GPG_OPTS}")
 
+printf "Executing: $CMD \n"
+
+$CMD
 
 # tag snapshot version after `mvn release:prepare`
 
