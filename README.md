@@ -63,100 +63,6 @@ updated and the application is deployed to the public release.
 
 
 
-### Generate GPG key
-
-1. Create a folder for GNUPGHOME or use default `~/.gnupg`.
-
-```sh
-sudo mkdir -m 700 /usr/local/.gnupg
-```
-
-2. Generate the gpg key
-
-```sh
-sudo GNUPGHOME=/usr/local/.gnupg gpg --gen-key
-```
-
-output will be, like the following:
-
-```
-gpg: /usr/local/.gnupg/trustdb.gpg: trustdb created
-gpg: key F164B430F91D6*** marked as ultimately trusted
-gpg: directory '/usr/local/.gnupg/openpgp-revocs.d' created
-gpg: revocation certificate stored as '/usr/local/.gnupg/openpgp-revocs.d/AD**...*.rev'
-public and secret key created and signed.
-```
-
-3. Export the environmental variable
-
-Note: Use `sudo` on requirement.
-
-```sh
-export GNUPGHOME=/usr/local/.gnupg
-
-gpg --homedir $GNUPGHOME --list-keys
-gpg --homedir $GNUPGHOME --list-secret-keys
-```
-
-#### Maven password encryption
-
-Follow the instructions at [encryption guide](https://maven.apache.org/guides/mini/guide-encryption.html)
-
-```sh
-mvn --encrypt-master-password
-```
-
-This commands produces an output as encrypted version of the password
-```output
-{jSMOWnoPFgsHVpMvz5VrIt5kRbzGpI8u+9EF1iFQyJQ=}
-```
-
-Store this password in `${user.home}/.m2/settings-security.xml`; it
-should look like
-
-```xml
-<settingsSecurity>
-  <master>{jSMOWnoPFgsHVpMvz5VrIt5kRbzGpI8u+9EF1iFQyJQ=}</master>
-</settingsSecurity>
-```
-
-Create an Encrypted version of the Apache Password
-
-```sh
-mvn --encrypt-password
-```
-
-Add a server entry to `~/.m2/settings.xml` file (create this file if
-it doesn't already exist). This server entry will have the Apache
-Snapshot ID, your Apache ID, and your encrypted password.
-
-```sh
-<settings>
-  <servers>
-    <server>
-      <id>apache.snapshots.systemds</id>
-      <username>APACHE_ID</username>
-      <password>{COQLCE6DU6GtcS5P=}</password>
-    </server>
-  </servers>
-</settings>
-```
-
-Note: editing `settings.xml` and running the above commands can still
-leave your password stored locally in plaintext. You may want to check
-the following locations:
-
-  - Shell history (eg. run `history`). Even best clear command line
-    history after encrypting the above passwords.
-  - Editor caches (eg. `~/.viminfo`)
-
-
-## Submit your GPG public key to a Public key server
-
-Use [MIT PGP Public Key Server](http://pgp.mit.edu:11371/) or [key server at `ubuntu.com`](https://keyserver.ubuntu.com/)
-at your convenience.
-
-
 ## Access to Apache Nexus repository
 
 Note: Only PMC can push to the Release repo for legal reasons.
@@ -200,22 +106,6 @@ Here:
 - The master branch is unchanged
 - There is a commit not on the master branch with the version adjusted
 - The RC tag points to that commit
-
-The versioning scheme is as follows.
-
-### Semantic versioning
-
-Semantic versioning is a formal convention for specifying compatibility. It uses a three-part version number: **major version**; **minor version**; and **patch**.  Version numbers  convey meaning about the underlying code and what has been modified. For example, versioning could be handled as follows:
-
-| Code status  | Stage  | Rule  | Example version  |
-|---|---|---|---|
-| First release  | New product  | Start with 1.0.0  | 1.0.0  |
-| Backward compatible fix  | Patch release  | Increment the third digit  | 1.0.1  |
-| Backward compatible new feature  | Minor release  | Increment the middle digit and reset the last digit to zero  | 1.1.0  |
-| Breaking updates | Major release | Increment the first digit and reset the middle and last digits to zero | 2.0.0 |
-
-
-major.minor.patch as per [semver.org](http://semver.org)
 
 ### Inform the team
 
@@ -575,3 +465,114 @@ to this guide. Help the community adapt this guide for release validation before
 vote.
 
 Perhaps some steps can be simplified or require more clarification.
+
+# Appendix
+
+### Generate GPG key
+
+1. Create a folder for GNUPGHOME or use default `~/.gnupg`.
+
+```sh
+sudo mkdir -m 700 /usr/local/.gnupg
+```
+
+2. Generate the gpg key
+
+```sh
+sudo GNUPGHOME=/usr/local/.gnupg gpg --gen-key
+```
+
+output will be, like the following:
+
+```
+gpg: /usr/local/.gnupg/trustdb.gpg: trustdb created
+gpg: key F164B430F91D6*** marked as ultimately trusted
+gpg: directory '/usr/local/.gnupg/openpgp-revocs.d' created
+gpg: revocation certificate stored as '/usr/local/.gnupg/openpgp-revocs.d/AD**...*.rev'
+public and secret key created and signed.
+```
+
+3. Export the environmental variable
+
+Note: Use `sudo` on requirement.
+
+```sh
+export GNUPGHOME=/usr/local/.gnupg
+
+gpg --homedir $GNUPGHOME --list-keys
+gpg --homedir $GNUPGHOME --list-secret-keys
+```
+
+#### Maven password encryption
+
+Follow the instructions at [encryption guide](https://maven.apache.org/guides/mini/guide-encryption.html)
+
+```sh
+mvn --encrypt-master-password
+```
+
+This commands produces an output as encrypted version of the password
+```output
+{jSMOWnoPFgsHVpMvz5VrIt5kRbzGpI8u+9EF1iFQyJQ=}
+```
+
+Store this password in `${user.home}/.m2/settings-security.xml`; it
+should look like
+
+```xml
+<settingsSecurity>
+  <master>{jSMOWnoPFgsHVpMvz5VrIt5kRbzGpI8u+9EF1iFQyJQ=}</master>
+</settingsSecurity>
+```
+
+Create an Encrypted version of the Apache Password
+
+```sh
+mvn --encrypt-password
+```
+
+Add a server entry to `~/.m2/settings.xml` file (create this file if
+it doesn't already exist). This server entry will have the Apache
+Snapshot ID, your Apache ID, and your encrypted password.
+
+```sh
+<settings>
+  <servers>
+    <server>
+      <id>apache.snapshots.systemds</id>
+      <username>APACHE_ID</username>
+      <password>{COQLCE6DU6GtcS5P=}</password>
+    </server>
+  </servers>
+</settings>
+```
+
+Note: editing `settings.xml` and running the above commands can still
+leave your password stored locally in plaintext. You may want to check
+the following locations:
+
+  - Shell history (eg. run `history`). Even best clear command line
+    history after encrypting the above passwords.
+  - Editor caches (eg. `~/.viminfo`)
+
+
+## Submit your GPG public key to a Public key server
+
+Use [MIT PGP Public Key Server](http://pgp.mit.edu:11371/) or [key server at `ubuntu.com`](https://keyserver.ubuntu.com/)
+at your convenience.
+
+The versioning scheme is as follows.
+
+### Semantic versioning
+
+Semantic versioning is a formal convention for specifying compatibility. It uses a three-part version number: **major version**; **minor version**; and **patch**.  Version numbers  convey meaning about the underlying code and what has been modified. For example, versioning could be handled as follows:
+
+| Code status  | Stage  | Rule  | Example version  |
+|---|---|---|---|
+| First release  | New product  | Start with 1.0.0  | 1.0.0  |
+| Backward compatible fix  | Patch release  | Increment the third digit  | 1.0.1  |
+| Backward compatible new feature  | Minor release  | Increment the middle digit and reset the last digit to zero  | 1.1.0  |
+| Breaking updates | Major release | Increment the first digit and reset the middle and last digits to zero | 2.0.0 |
+
+
+major.minor.patch as per [semver.org](http://semver.org)
