@@ -99,7 +99,6 @@ CMD="mvn --batch-mode -DdryRun=${dry_run} -Dtag=$RELEASE_TAG release:prepare \
                  -Dresume=false \
                  -DreleaseVersion=$RELEASE_VERSION \
                  -DdevelopmentVersion=$NEXT_VERSION \
-                 -Darguments="-Dgpg.ascDirectory=${GITHUB_WORKSPACE}/systemds/target" \
                  -Darguments=${GPG_OPTS} -X -Dgpg.passphrase=$GPG_PASSPHRASE"
 
 printf "Executing: $CMD \n"
