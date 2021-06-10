@@ -4,6 +4,7 @@
 name: Test Release scripts with dry run
 
 on:
+  push:
   release:
     types: [created]
     
@@ -36,7 +37,8 @@ jobs:
     - name: gpg key generation - transient
       run: |
         printf "HOME: $HOME \n"
-        mkdir $HOME/gnupg_home
+        sudo mkdir $HOME/gnupg_home
+        ls $HOME
         sudo chmod 700 $HOME/gnupg_home
         sudo chmod 600 $HOME/gnupg_home/*
         export GNUPGHOME="$HOME/gnupg_home"
