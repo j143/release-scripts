@@ -36,6 +36,9 @@ jobs:
     - name: gpg key generation - transient
       run: |
         printf "HOME: $HOME \n"
+        mkdir $HOME/gnupg_home
+        sudo chmod 700 $HOME/gnupg_home
+        sudo chmod 600 $HOME/gnupg_home/*
         export GNUPGHOME="$HOME/gnupg_home"
         ls *
         cat >tempkey <<EOF
