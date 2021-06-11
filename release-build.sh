@@ -3,7 +3,7 @@
 exit_with_usage() {
 
   cat << EOF
-usage: release-details.sh <package|docs>
+usage: release-build.sh <package|docs>
 
 Create build deliverables from a commit
 Top level targets are
@@ -50,7 +50,7 @@ else
   dry_run=true
 fi
 
-printf "Dry Run?: $dry_run \n"
+printf "\n Dry Run?: $dry_run \n"
 
 
 # Build docs (production)
@@ -75,9 +75,15 @@ EOF
 
 if [[ "$1" == "publish-snapshot" ]]; then
   
-  mvn --settings ../tmp-settings.xml deploy -DskipTests -Dmaven.deploy.skip="${dry_run}" \
+  CMD="mvn --settings ../tmp-settings.xml deploy -DskipTests -Dmaven.deploy.skip=${dry_run} \
     -DaltSnapshotDeploymentRepository=github::default::https://maven.pkg.github.com/j143/systemds \
-    ${GPG_OPTS}
+    -Daether.checksums.algorithms=SHA-512 \
+    ${GPG_OPTS}"
+
+  printf "\n #### Executing command: #### \n"
+  printf "\n $(bold $(greencolor $CMD)) \n\n"
+
+  $CMD
 
 fi
 
@@ -85,29 +91,50 @@ RELEASE_STAGING_LOCATION="https://dist.apache.org/repos/dist/dev/systemds"
 DEST_DIR_NAME="$PACKAGE_VERSION"
 if [[ "$1" == "publish-apache-staging" ]]; then
 
-  svn co --depth=empty $RELEASE_STAGING_LOCATION svn-systemds
-  rm -rf "svn-systemds/${DEST_DIR_NAME}"
-  mkdir -p "svn-systemds/${DEST_DIR_NAME}"
+  cd ..
 
-  printf "Copy the release tarballs to svn repo"
-  cp systemds-* "svn-systemds/${DEST_DIR_NAME}/"
-  svn add "svn-systemds/${DEST_DIR_NAME}"
+  svn co --depth=empty $RELEASE_STAGING_LOCATION svn-systemds
+
+  # rm -rf "svn-systemds/${DEST_DIR_NAME}-tmptest-*"
+  #
+  # CAUTION: Investigate the delete/rm command and see if there
+  # is any alternative.
+  # 
+  svn rm "svn-systemds/${DEST_DIR_NAME}-tmptest-*"
+  
+  if [[ ! is_dry_run ]]; then
+    stage_dir=$(mkdir -p svn-systemds/${DEST_DIR_NAME}-temp)
+  else
+    stage_dir=$(mktemp -d svn-systemds/${DEST_DIR_NAME}-tmptest-XXXX)
+  fi
+
+  printf "\nCopy the release tarballs to svn repo \n"
+  cp systemds/target/systemds-* "${stage_dir}"
+  svn add "${stage_dir}"
 
   cd svn-systemds
   svn ci --username "$ASF_USERNAME" --password "$ASF_PASSWORD" -m"Apache SystemDS $SYSTEMDS_PACKAGE_VERSION" --no-auth-cache
   cd ..
   rm -rf svn-systemds
+  
+  # change to systemds directory, for the next step.
+  cd systemds
 
 fi
 
 
 if [[ "$1" == "publish-staging" ]]; then
 
-  mvn --settings ../tmp-settings.xml -P'distribution,rat' deploy \
-    -DskiptTests -Dmaven.deploy.skip="${dry_run}" \
+  CMD="mvn --settings ../tmp-settings.xml -P'distribution,rat' deploy \
+    -DskiptTests -Dmaven.deploy.skip=${dry_run} \
     -DaltDeploymentRepository=github::default::https://maven.pkg.github.com/j143/systemds \
     -Daether.checksums.algorithms=SHA-512 \
-    ${GPG_OPTS}
+    ${GPG_OPTS}"
+
+  printf "\n #### Executing command: #### \n"
+  printf "\n $(bold $(greencolor $CMD)) \n\n"
+
+  $CMD  
 fi
 
 # if [[ -z "$GPG_KEY" ]]; then
@@ -122,10 +149,10 @@ NEXUS_PROFILE=1486a6e8f50cdf
 
 if [[ "$1" == "publish-release" ]]; then
 
-  cd systemds
+  # cd systemds
   
   # Publishing spark to Maven Central Repo
-  prinf "Release version is ${PACKAGE_VERSION} \n"
+  printf "Release version is ${PACKAGE_VERSION} \n"
   
   mvn versions:set -DnewVersion=${PACKAGE_VERSION}
 

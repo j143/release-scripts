@@ -29,6 +29,14 @@ revcolor() {
 }
 
 
+# color values
+# red 1; green 2; blue 4; magenta 5;
+greencolor() {
+  tput setaf 2
+  echo -n "$@"
+  tput sgr0
+}
+
 # exit with error message
 error() {
   echo "$*"

@@ -103,7 +103,8 @@ CMD="mvn --batch-mode -DdryRun=${dry_run} -Dtag=$RELEASE_TAG release:prepare \
                  -Darguments=${GPG_OPTS} \
                  -Daether.checksums.algorithms=SHA-512"
 
-printf "\nExecuting: $(bold $CMD) \n\n"
+printf "\n #### Executing command: #### \n"
+printf "\n $(bold $(greencolor $CMD)) \n\n"
 
 $CMD
 

@@ -20,10 +20,13 @@ get_release_info
 . "$SELF/create-tag.sh"
 
 # build
-. "$SELF/release-build.sh" publish-snapshot
+# . "$SELF/release-build.sh" publish-snapshot
 
 git checkout $RELEASE_TAG
 printf "checking out $RELEASE_TAG for building artifacts"
 
-. "$SELF/release-build.sh" publish-staging
 
+. "$SELF/release-build.sh" publish-apache-staging
+# . "$SELF/release-build.sh" publish-staging
+
+. "$SELF/release-build.sh" publish-release
