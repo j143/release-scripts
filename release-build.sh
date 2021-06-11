@@ -227,7 +227,9 @@ EOF
   fi
 
   popd
-  rm -rf "${tmp_repo}"
+
+  # NOTE: Do not delete any generated release artifacts
+  # rm -rf "${tmp_repo}"
   cd ..
   exit 0
 fi
