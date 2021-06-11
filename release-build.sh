@@ -193,9 +193,8 @@ if [[ "$1" == "publish-release" ]]; then
 </settings>
 EOF
 
-  # mvn -Dmaven.repo.local=${tmp_repo} -P'distribution' -Daether.checksums.algorithms='SHA-1,SHA-512' clean install
-  mvn --settings ../tmp-settings-nexus.xml -Pdistribution deploy -DskiptTests \ 
-    -DaltDeploymentRepository=local-temp::default::${tmp_repo} \
+  mvn --settings ../tmp-settings-nexus.xml -Pdistribution deploy \
+    -DaltDeploymentRepository=local-temp::default::file://${tmp_repo} \
     -Daether.checksums.algorithms=SHA-512
 
   pushd "${tmp_repo}/org/apache/systemds"
@@ -206,7 +205,7 @@ EOF
     printf "Upload files to $nexus_upload_id"
 
     # Remove extra files generated
-    find . -type f | grep -v \.jar | grep -v \.pom | xargs rm
+    # find . -type f | grep -v \.jar | grep -v \.pom | xargs rm
 
     for file in $(find . -type f)
     do
