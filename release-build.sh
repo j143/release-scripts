@@ -70,16 +70,21 @@ cat <<EOF >../tmp-settings.xml
 <settings><servers><server>
 <id>apache.snapshots.https</id><username>${ASF_USERNAME}</username>
 <password>${ASF_PASSWORD}</password>
-</server></servers></settings>
+</server>
+<server>
+<id>apache.releases.https</id><username>${ASF_USERNAME}</username>
+<password>${ASF_PASSWORD}</password>
+</server>
+</servers>
+</settings>
 EOF
 
 if [[ "$1" == "publish-snapshot" ]]; then
   
   CMD="mvn --settings ../tmp-settings.xml deploy -DskipTests -Dmaven.deploy.skip=${dry_run} \
-    -DaltSnapshotDeploymentRepository=github::default::https://maven.pkg.github.com/j143/systemds \
     -Daether.checksums.algorithms=SHA-512 \
     ${GPG_OPTS}"
-
+  # -DaltSnapshotDeploymentRepository=github::default::https://maven.pkg.github.com/j143/systemds \
   printf "\n #### Executing command: #### \n"
   printf "\n $(bold $(greencolor $CMD)) \n\n"
 
@@ -125,9 +130,10 @@ fi
 
 if [[ "$1" == "publish-staging" ]]; then
 
-  CMD="mvn --settings ../tmp-settings.xml -P'distribution,rat' deploy \
+  mvn versions:set -DnewVersion=${PACKAGE_VERSION}
+
+  CMD="mvn --settings ../tmp-settings.xml clean -Pdistribution deploy \
     -DskiptTests -Dmaven.deploy.skip=${dry_run} \
-    -DaltDeploymentRepository=github::default::https://maven.pkg.github.com/j143/systemds \
     -Daether.checksums.algorithms=SHA-512 \
     ${GPG_OPTS}"
 
@@ -167,7 +173,30 @@ if [[ "$1" == "publish-release" ]]; then
 
   tmp_repo=$(mktemp -d systemds-repo-tmp-XXXXX)
 
-  mvn -Dmaven.repo.local=${tmp_repo} -P'distribution' -Daether.checksums.algorithms='SHA-1,SHA-512' clean install
+  cat <<EOF >../tmp-settings-nexus.xml
+<settings>
+<activeProfiles>
+    <activeProfile>local-temp</activeProfile>
+  </activeProfiles>
+
+  <profiles>
+    <profile>
+      <id>local-temp</id>
+      <repositories>
+        <repository>
+          <id>local-temp</id>
+          <url>${tmp_repo}</url>
+        </repository>
+      </repositories>
+    </profile>
+  </profiles>
+</settings>
+EOF
+
+  # mvn -Dmaven.repo.local=${tmp_repo} -P'distribution' -Daether.checksums.algorithms='SHA-1,SHA-512' clean install
+  mvn --settings ../tmp-settings-nexus.xml -Pdistribution deploy -DskiptTests \ 
+    -DaltDeploymentRepository=local-temp::default::${tmp_repo} \
+    -Daether.checksums.algorithms=SHA-512
 
   pushd "${tmp_repo}/org/apache/systemds"
 
@@ -195,7 +224,7 @@ if [[ "$1" == "publish-release" ]]; then
       $NEXUS_ROOT/profiles/$NEXUS_PROFILE/finish)
     printf "Closed Nexus staging repository: $staged_repository_id"
 
-    printf "After release vote passes make sure to hit release button"
+    printf "\nAfter $(bold $(greencolor release vote)) passes make sure to hit $(rev release) button \n"
   fi
 
   popd

@@ -20,15 +20,18 @@ get_release_info
 run_silent "Creating release tag $RELEASE_TAG..." "tag.log" \
     "$SELF/create-tag.sh"
 
-# build
-# . "$SELF/release-build.sh" publish-snapshot
+# run_silent "Publish Release Candidates to the Nexus Repo..." "publish-snapshot.log" \
+#     "$SELF/release-build.sh" publish-snapshot
+
+# run_silent "Publish Release Candidates to the Nexus Repo..." "publish-staging.log" \
+#     "$SELF/release-build.sh" publish-staging
 
 # git checkout $RELEASE_TAG
 # printf "\n checking out $RELEASE_TAG for building artifacts \n"
 
+
 run_silent "Publish Release Candidates to the Nexus Repo..." "publish.log" \
     "$SELF/release-build.sh" publish-release
-
 
 run_silent "Publish Release Candidates to svn repo..." "publish-apache-staging.log" \
     "$SELF/release-build.sh" publish-apache-staging
