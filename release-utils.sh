@@ -10,6 +10,32 @@ ASF_REPO_CONTENT="https://raw.githubusercontent.com/apache/systemds"
 GPG_TTY=$(tty)
 export GPG_TTY
 
+# Output font formatting
+export TERM=ansi
+
+bold() {
+  tput bold
+  echo -n "$@"
+
+  # turn off bold
+  tput sgr0
+}
+
+revcolor() {
+  # standout mode
+  tput smso
+  echo -n "$@"
+  tput rmso
+}
+
+
+# color values
+# red 1; green 2; blue 4; magenta 5;
+greencolor() {
+  tput setaf 2
+  echo -n "$@"
+  tput sgr0
+}
 
 # exit with error message
 error() {
@@ -17,7 +43,6 @@ error() {
   exit 1
 }
 
-printf "Dry Run?: ${DRY_RUN} (1: true, 0: false)\n"
 
 # Read the configuration
 read_config() {
@@ -42,6 +67,35 @@ parse_version() {
     head -n 2 | tail -n 1 | cut -d '>' -f2 | cut -d '<' -f1
 }
 
+# function to log output to a .log file
+run_silent() {
+  local DESCRIPTION="$1"
+  local LOG_FILE="$2"
+  
+  # Remove the first two arguments
+  # https://ss64.com/bash/shift.html
+  shift 2
+
+  printf "\n =============== "
+  printf "\n = $DESCRIPTION "
+  printf "\n Executing command: "
+  printf "\n $(bold $(greencolor $@ )) \n"
+  printf "\n Log file: $LOG_FILE "
+  printf "\n =============== \n"
+  
+  # 2>&1 https://stackoverflow.com/a/818284
+  # 1 stdout, 2 stderr, >& redirect merger operator
+  "$@" 1>"$LOG_FILE" 2>&1
+  
+  # a successful command returns 0 exit code
+  local SUCCESS=$?
+  if [ $SUCCESS != 0 ]; then
+    printf "\n Command FAILED to Execute. Log files are available.\n"
+    tail "$LOG_FILE"
+    exit $SUCCESS
+  fi
+}
+
 # TODO: git clone systemds function
 # https://git-scm.com/docs/git-clean
 # git clean -d -f -x
@@ -59,7 +113,6 @@ get_release_info() {
   if [ -z "$GIT_BRANCH" ]; then
     # If not branch is specified, find the latest branch from repo
     GIT_BRANCH=$(git ls-remote --heads "$ASF_REPO" |
-      grep -v refs/heads/master |
       awk '{print $2}' |
       sort -r |
       head -n 1 |
@@ -134,8 +187,10 @@ get_release_info() {
   export PACKAGE_VERSION="$RELEASE_TAG"
 
   # Git configuration info
+  # The ASF ID is obtained from
+  # https://people.apache.org/phonebook.html?unix=systemds
   if [ -z "$ASF_USERNAME" ]; then
-    export ASF_USERNAME=$(read_config "ASF user" "$LOGNAME")
+    export ASF_USERNAME=$(read_config "ASF ID" "$LOGNAME")
   fi
 
   if [ -z "$GIT_NAME" ]; then
@@ -160,7 +215,7 @@ BRANCH:     $GIT_BRANCH
 VERSION:    $RELEASE_VERSION
 TAG:        $RELEASE_TAG
 NEXT:       $NEXT_VERSION
-ASF USER:   $ASF_USERNAME
+ASF ID:   $ASF_USERNAME
 GPG KEY ID:    $GPG_KEY
 FULL NAME:  $GIT_NAME
 E-MAIL:     $GIT_EMAIL

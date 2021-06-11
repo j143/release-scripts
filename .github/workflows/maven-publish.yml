@@ -80,6 +80,7 @@ jobs:
         cd systemds
         ls *
         export GNUPGHOME="$HOME/gnupghome"
+        gpgconf --kill gpg-agent
         ls $GNUPGHOME
         GPG_KEY_FINGERPRINT="$(gpg --list-keys | head -n 4 | tail -n 1 | sed 's/^ *//g')"
         GPG_KEY_ID="${GPG_KEY_FINGERPRINT: (-8)}"
