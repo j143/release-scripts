@@ -71,13 +71,20 @@ parse_version() {
 run_silent() {
   local DESCRIPTION="$1"
   local LOG_FILE="$2"
+  
+  # Remove the first two arguments
+  # https://ss64.com/bash/shift.html
+  shift 2
 
-  printf "\n =============== \n"
-  printf "\n = $DESCRIPTION \n"
-  printf "\n Executing command: \n"
+  printf "\n =============== "
+  printf "\n = $DESCRIPTION "
+  printf "\n Executing command: "
   printf "\n $(bold $(greencolor $@ )) \n"
-  printf "\n Log file: $LOG_FILE \n"
-
+  printf "\n Log file: $LOG_FILE "
+  printf "\n =============== \n"
+  
+  # 2>&1 https://stackoverflow.com/a/818284
+  # 1 stdout, 2 stderr, >& redirect merger operator
   "$@" 1>"$LOG_FILE" 2>&1
   
   # a successful command returns 0 exit code
@@ -98,8 +105,6 @@ check_for_tag() {
     curl -s --head --fail "$ASF_REPO/releases/tag/$1" > /dev/null
 }
 
-
-export DRY_RUN=$(read_config "Is this the dry run (1 for yes, 0 for No)" "$DRY_RUN")
 
 # get the release info including
 # branch details, snapshot version

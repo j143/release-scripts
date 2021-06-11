@@ -167,7 +167,7 @@ if [[ "$1" == "publish-release" ]]; then
 
   tmp_repo=$(mktemp -d systemds-repo-tmp-XXXXX)
 
-  mvn -Dmaven.repo.local=${tmp_repo} -P'distribution' -Daether.checksums.algorithms=SHA-512 clean install
+  mvn -Dmaven.repo.local=${tmp_repo} -P'distribution' -Daether.checksums.algorithms='SHA-1,SHA-512' clean install
 
   pushd "${tmp_repo}/org/apache/systemds"
 
