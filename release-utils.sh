@@ -43,7 +43,6 @@ error() {
   exit 1
 }
 
-printf "Dry Run?: ${DRY_RUN} (1: true, 0: false)\n"
 
 # Read the configuration
 read_config() {
@@ -68,6 +67,28 @@ parse_version() {
     head -n 2 | tail -n 1 | cut -d '>' -f2 | cut -d '<' -f1
 }
 
+# function to log output to a .log file
+run_silent() {
+  local DESCRIPTION="$1"
+  local LOG_FILE="$2"
+
+  printf "\n =============== \n"
+  printf "\n = $DESCRIPTION \n"
+  printf "\n Executing command: \n"
+  printf "\n $(bold $(greencolor $@ )) \n"
+  printf "\n Log file: $LOG_FILE \n"
+
+  "$@" 1>"$LOG_FILE" 2>&1
+  
+  # a successful command returns 0 exit code
+  local SUCCESS=$?
+  if [ $SUCCESS != 0 ]; then
+    printf "\n Command FAILED to Execute. Log files are available.\n"
+    tail "$LOG_FILE"
+    exit $SUCCESS
+  fi
+}
+
 # TODO: git clone systemds function
 # https://git-scm.com/docs/git-clean
 # git clean -d -f -x
@@ -77,6 +98,8 @@ check_for_tag() {
     curl -s --head --fail "$ASF_REPO/releases/tag/$1" > /dev/null
 }
 
+
+export DRY_RUN=$(read_config "Is this the dry run (1 for yes, 0 for No)" "$DRY_RUN")
 
 # get the release info including
 # branch details, snapshot version
