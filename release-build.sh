@@ -195,7 +195,7 @@ EOF
 
   mvn --settings ../tmp-settings-nexus.xml -Pdistribution deploy \
     -DaltDeploymentRepository=local-temp::default::file://${tmp_repo} \
-    -Daether.checksums.algorithms='SHA-512,SHA-215,MD5'
+    -Daether.checksums.algorithms='SHA-512,SHA-1,MD5'
 
   pushd "${tmp_repo}/org/apache/systemds"
 
