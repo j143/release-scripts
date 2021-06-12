@@ -174,6 +174,10 @@ EOF
     -Daether.checksums.algorithms='SHA-512,SHA-1,MD5'
 
   pushd "${tmp_repo}/org/apache/systemds"
+  
+  # Name the release candidate folder as x.y.0-rc#
+  # This will help keep the candidates separate.
+  mv systemds/${RELEASE_VERSION} systemds/${PACKAGE_VERSION}
 
   if ! is_dry_run; then
     # upload files to nexus repo
@@ -219,7 +223,7 @@ EOF
     # Remove extra files generated
     # Keep only .zip, .tgz, and javadoc
     find . -type f | grep -v -e \.zip -e \.tgz -e javadoc | xargs rm
-    cp systemds/${RELEASE_VERSION}/systemds-* "${stage_dir}"
+    cp systemds/${PACKAGE_VERSION}/systemds-* "${stage_dir}"
     svn add "${stage_dir}"
     
     cd svn-systemds
