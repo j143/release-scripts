@@ -92,40 +92,6 @@ if [[ "$1" == "publish-snapshot" ]]; then
 
 fi
 
-RELEASE_STAGING_LOCATION="https://dist.apache.org/repos/dist/dev/systemds"
-DEST_DIR_NAME="$PACKAGE_VERSION"
-if [[ "$1" == "publish-apache-staging" ]]; then
-
-  cd ..
-
-  svn co --depth=empty $RELEASE_STAGING_LOCATION svn-systemds
-
-  # rm -rf "svn-systemds/${DEST_DIR_NAME}-tmptest-*"
-  #
-  # CAUTION: Investigate the delete/rm command and see if there
-  # is any alternative.
-  # 
-  svn rm "svn-systemds/${DEST_DIR_NAME}-tmptest-*"
-  
-  if [[ ! is_dry_run ]]; then
-    stage_dir=$(mkdir -p svn-systemds/${DEST_DIR_NAME}-temp)
-  else
-    stage_dir=$(mktemp -d svn-systemds/${DEST_DIR_NAME}-tmptest-XXXX)
-  fi
-
-  printf "\nCopy the release tarballs to svn repo \n"
-  cp systemds/target/systemds-* "${stage_dir}"
-  svn add "${stage_dir}"
-
-  cd svn-systemds
-  svn ci --username "$ASF_USERNAME" --password "$ASF_PASSWORD" -m"Apache SystemDS $SYSTEMDS_PACKAGE_VERSION" --no-auth-cache
-  cd ..
-  rm -rf svn-systemds
-  
-  # change to systemds directory, for the next step.
-  cd systemds
-
-fi
 
 
 if [[ "$1" == "publish-staging" ]]; then
@@ -149,16 +115,27 @@ fi
 
 # GPG="gpg -u $GPG_KEY --no-tty --batch --pinentry-mode loopback"
 
-# Publishing to Sonatype repo
+# Publishing to Sonatype repo, details:
 NEXUS_ROOT=https://repository.apache.org/service/local/staging
 NEXUS_PROFILE=1486a6e8f50cdf
+
+# Apache SVN Repo, details:
+RELEASE_STAGING_LOCATION="https://dist.apache.org/repos/dist/dev/systemds"
+DEST_DIR_NAME="$PACKAGE_VERSION"
+
+# NOTE:
+# Build files will be saved to this folder.
+# This folder will be used by
+# - publish-release
+# - publish-apache-staging
+tmp_repo=$(mktemp -d systemds-repo-tmp-XXXXX)
 
 if [[ "$1" == "publish-release" ]]; then
 
   # cd systemds
   
   # Publishing spark to Maven Central Repo
-  printf "Release version is ${PACKAGE_VERSION} \n"
+  printf "\nRelease version is ${PACKAGE_VERSION} \n"
   
   mvn versions:set -DnewVersion=${PACKAGE_VERSION}
 
@@ -170,8 +147,6 @@ if [[ "$1" == "publish-release" ]]; then
       $NEXUS_ROOT/profiles/$NEXUS_PROFILE/start)
     staged_repository_id=$(echo $out | sed -e "s/.*\(orgapachesystemds-[0-9]\{4\}\).*/\1/")
   fi
-
-  tmp_repo=$(mktemp -d systemds-repo-tmp-XXXXX)
 
   cat <<EOF >../tmp-settings-nexus.xml
 <settings>
@@ -199,10 +174,10 @@ EOF
 
   pushd "${tmp_repo}/org/apache/systemds"
 
-  if ! is_dry_run; then
+  # if ! is_dry_run; then
     # upload files to nexus repo
     nexus_upload_id=$NEXUS_ROOT/deployByRepositoryId/$staged_repository_id
-    printf "Upload files to $nexus_upload_id"
+    printf "\nUpload files to $nexus_upload_id \n"
 
     # Remove extra files generated
     # find . -type f | grep -v \.jar | grep -v \.pom | xargs rm
@@ -212,7 +187,7 @@ EOF
       # strip leading ./
       file_short=$(echo $file | sed -e "s/\.\///")
       dest_url="$nexus_upload_id/org/apache/systemds/$file_short"
-      printf "Uploading $file_short \n"
+      printf "\nUploading $file_short \n"
       curl -u $ASF_USERNAME:$ASF_PASSWORD --upload-file $file_short $dest_url
     done
 
@@ -223,8 +198,29 @@ EOF
       $NEXUS_ROOT/profiles/$NEXUS_PROFILE/finish)
     printf "Closed Nexus staging repository: $staged_repository_id"
 
-    printf "\nAfter $(bold $(greencolor release vote)) passes make sure to hit $(rev release) button \n"
-  fi
+    printf "\nAfter release vote passes make sure to hit release button.\n"
+  # fi
+    
+    printf "\n ============== "
+    printf "\n Upload artifacts to dist.apache.org"
+    
+    svn co --depth=empty $RELEASE_STAGING_LOCATION svn-systemds
+
+    # if [[ ! is_dry_run ]]; then
+    #   stage_dir=$(mkdir -p svn-systemds/${DEST_DIR_NAME}-temp)
+    # else
+      stage_dir=$(mktemp -d svn-systemds/${DEST_DIR_NAME}-tmptest-XXXX)
+    # fi
+
+    printf "\nCopy the release tarballs to svn repo \n"
+    ls *
+    cp systemds/${DEST_DIR_NAME}/systemds-* "${stage_dir}"
+    svn add "${stage_dir}"
+    
+    cd svn-systemds
+    svn ci --username "$ASF_USERNAME" --password "$ASF_PASSWORD" -m"Apache SystemDS $SYSTEMDS_PACKAGE_VERSION" --no-auth-cache
+    cd ..
+    rm -rf svn-systemds
 
   popd
 
@@ -233,4 +229,4 @@ EOF
   cd ..
   exit 0
 fi
-  
+
