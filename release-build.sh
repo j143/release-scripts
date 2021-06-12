@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+SELF=$(cd $(dirname $0) && pwd)
+. "$SELF/release-utils.sh"
+
 exit_with_usage() {
 
   cat << EOF
@@ -25,7 +28,7 @@ EOF
 }
 
 if [ $# -eq 0 ]; then
-  echo "usage: release-build.sh <package|docs|publish-release|publish-staging>"
+  echo "usage: release-build.sh <docs|publish-release>"
 fi
 
 error() {
@@ -61,7 +64,7 @@ if [[ "$1" == "docs" ]]; then
   cd docs
 
   bundle install
-  PRODUCTION=1 RELEASE_VERSION="2.1.0" bundle exec jekyll build
+  PRODUCTION=1 RELEASE_VERSION="$RELEASE_VERSION" bundle exec jekyll build
 fi
 
 GPG_OPTS="-Dgpg.keyname=${GPG_KEY} -Dgpg.passphrase=${GPG_PASSPHRASE}"
@@ -135,7 +138,7 @@ if [[ "$1" == "publish-release" ]]; then
   # Publishing spark to Maven Central Repo
   printf "\nRelease version is ${PACKAGE_VERSION} \n"
   
-  mvn versions:set -DnewVersion=${PACKAGE_VERSION}
+  mvn versions:set -DnewVersion=${RELEASE_VERSION}
 
   if ! is_dry_run; then
     printf "Creating a Nexus staging repository \n"
@@ -172,7 +175,7 @@ EOF
 
   pushd "${tmp_repo}/org/apache/systemds"
 
-  # if ! is_dry_run; then
+  if ! is_dry_run; then
     # upload files to nexus repo
     nexus_upload_id=$NEXUS_ROOT/deployByRepositoryId/$staged_repository_id
     printf "\nUpload files to $nexus_upload_id \n"
@@ -197,7 +200,7 @@ EOF
     printf "Closed Nexus staging repository: $staged_repository_id"
 
     printf "\nAfter release vote passes make sure to hit release button.\n"
-  # fi
+  fi
     
     printf "\n ============== "
     printf "\n Upload artifacts to dist.apache.org"

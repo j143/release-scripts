@@ -23,8 +23,8 @@ run_silent "Creating release tag $RELEASE_TAG..." "tag.log" \
 # run_silent "Publish Release Candidates to the Nexus Repo..." "publish-snapshot.log" \
 #     "$SELF/release-build.sh" publish-snapshot
 
-# git checkout $RELEASE_TAG
-# printf "\n checking out $RELEASE_TAG for building artifacts \n"
+git checkout $RELEASE_TAG
+printf "\n checking out $RELEASE_TAG for building artifacts \n"
 
 # NOTE:
 # The following goals publishes the artifacts to
