@@ -214,7 +214,7 @@ EOF
     # if [[ ! is_dry_run ]]; then
     #   stage_dir=$(mkdir -p svn-systemds/${DEST_DIR_NAME}-temp)
     # else
-      stage_dir=$(mktemp -d svn-systemds/${PACKAGE_VERSION})
+      stage_dir=$(mkdir -p svn-systemds/${PACKAGE_VERSION})
     # fi
 
     printf "\nCopy the release tarballs to svn repo \n"
