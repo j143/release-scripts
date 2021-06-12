@@ -17,8 +17,8 @@ get_release_info
 
 
 # tag
-run_silent "Creating release tag $RELEASE_TAG..." "tag.log" \
-    "$SELF/create-tag.sh"
+# run_silent "Creating release tag $RELEASE_TAG..." "tag.log" \
+#     "$SELF/create-tag.sh"
 
 # run_silent "Publish Release Candidates to the Nexus Repo..." "publish-snapshot.log" \
 #     "$SELF/release-build.sh" publish-snapshot
