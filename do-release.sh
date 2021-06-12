@@ -23,16 +23,17 @@ run_silent "Creating release tag $RELEASE_TAG..." "tag.log" \
 # run_silent "Publish Release Candidates to the Nexus Repo..." "publish-snapshot.log" \
 #     "$SELF/release-build.sh" publish-snapshot
 
-# run_silent "Publish Release Candidates to the Nexus Repo..." "publish-staging.log" \
-#     "$SELF/release-build.sh" publish-staging
-
 # git checkout $RELEASE_TAG
 # printf "\n checking out $RELEASE_TAG for building artifacts \n"
 
+# NOTE:
+# The following goals publishes the artifacts to
+#  1) Nexus repo at repository.apache.org
+#  2) SVN repo at dist.apache.org
+# 
+# are to be used together.
 
 run_silent "Publish Release Candidates to the Nexus Repo..." "publish.log" \
     "$SELF/release-build.sh" publish-release
 
-run_silent "Publish Release Candidates to svn repo..." "publish-apache-staging.log" \
-    "$SELF/release-build.sh" publish-apache-staging
 
