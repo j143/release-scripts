@@ -207,14 +207,14 @@ EOF
   fi
     
     printf "\n ============== "
-    printf "\n Upload artifacts to dist.apache.org"
+    printf "\n Upload artifacts to dist.apache.org \n"
     
     svn co --depth=empty $RELEASE_STAGING_LOCATION svn-systemds
 
     # if [[ ! is_dry_run ]]; then
     #   stage_dir=$(mkdir -p svn-systemds/${DEST_DIR_NAME}-temp)
     # else
-      stage_dir=$(mktemp -d svn-systemds/${DEST_DIR_NAME}-tmptest-XXXX)
+      stage_dir=$(mktemp -d svn-systemds/${PACKAGE_VERSION}-tmptest-XXXX)
     # fi
 
     printf "\nCopy the release tarballs to svn repo \n"
