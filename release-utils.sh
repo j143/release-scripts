@@ -161,7 +161,7 @@ get_release_info() {
     RC_COUNT=1
   fi
 
-  export NEXT_VERSION
+  export NEXT_VERSION=$(read_config "Next development version" "$NEXT_VERSION")
   export RELEASE_VERSION=$(read_config "Release" "$RELEASE_VERSION")
 
   RC_COUNT=$(read_config "RC #" "$RC_COUNT")
