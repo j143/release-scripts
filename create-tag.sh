@@ -46,6 +46,9 @@ for env in ASF_USERNAME ASF_PASSWORD RELEASE_VERSION RELEASE_TAG NEXT_VERSION GI
   fi
 done
 
+# 
+# @uri does % encoding.
+# refer: https://stedolan.github.io/jq/manual/#:~:text=@uri
 uriencode() { jq -nSRr --arg v "$1" '$v|@uri'; }
 
 declare -r ENCODED_ASF_PASSWORD=$(uriencode "$ASF_PASSWORD")
@@ -95,17 +98,17 @@ printf "\n Dry Run?: $dry_run \n"
 # not propagated to the forked session automatically.
 # 
 
-CMD="mvn --batch-mode -DdryRun=${dry_run} -Dtag=$RELEASE_TAG release:prepare \
-                 -Dresume=false \
-                 -DreleaseVersion=$RELEASE_VERSION \
-                 -DdevelopmentVersion=$NEXT_VERSION \
-                 -Dgpg.keyname=${GPG_KEY} -Dgpg.passphrase=${GPG_PASSPHRASE} \
-                 -Darguments=${GPG_OPTS}"
+# CMD="mvn --batch-mode -DdryRun=${dry_run} -Dtag=$RELEASE_TAG release:prepare \
+#                  -Dresume=false \
+#                  -DreleaseVersion=$RELEASE_VERSION \
+#                  -DdevelopmentVersion=$NEXT_VERSION \
+#                  -Dgpg.keyname=${GPG_KEY} -Dgpg.passphrase=${GPG_PASSPHRASE} \
+#                  -Darguments=${GPG_OPTS}"
 
-printf "\n #### Executing command: #### \n"
-printf "\n $(bold $(greencolor $CMD)) \n\n"
+# printf "\n #### Executing command: #### \n"
+# printf "\n $(bold $(greencolor $CMD)) \n\n"
 
-$CMD
+# $CMD
 
 # tag snapshot version after `mvn release:prepare`
 
