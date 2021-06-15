@@ -129,7 +129,7 @@ DEST_DIR_NAME="$PACKAGE_VERSION"
 # NOTE:
 # Build files will be saved to this folder.
 # This folder will be used by `publish-release`
-tmp_repo=$(mktemp -d systemds-repo-tmp-XXXXX)
+tmp_repo=$(mktemp -d target/systemds-repo-tmp-XXXXX)
 
 if [[ "$1" == "publish-release" ]]; then
 
