@@ -223,19 +223,19 @@ EOF
     # Remove extra files generated
     # Keep only .zip, .tgz, and javadoc
     find . -type f | grep -v -e \.zip -e \.tgz -e javadoc | xargs rm
-    cp systemds/${PACKAGE_VERSION}/systemds-* "${stage_dir}"
+    eval cp systemds/${PACKAGE_VERSION}/systemds-* "${stage_dir}"
     svn add "${stage_dir}"
     
-    cd svn-systemds
+    eval cd svn-systemds
     svn ci --username "$ASF_USERNAME" --password "$ASF_PASSWORD" -m"Apache SystemDS $SYSTEMDS_PACKAGE_VERSION" --no-auth-cache
-    cd ..
+    eval cd ..
     rm -rf svn-systemds
 
   popd
 
   # NOTE: Do not delete any generated release artifacts
   # rm -rf "${tmp_repo}"
-  cd ..
+  eval cd ..
   exit 0
 fi
 
