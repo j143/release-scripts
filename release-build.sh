@@ -176,10 +176,6 @@ EOF
 
   pushd "${tmp_repo}/org/apache/systemds"
   
-  # 
-  # Name the release candidate folder as x.y.0-rc#
-  # This will help keep the candidates separate.
-  # mv systemds/${RELEASE_VERSION} systemds/${PACKAGE_VERSION}
 
   if ! is_dry_run; then
     # upload files to nexus repo
