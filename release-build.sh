@@ -133,7 +133,7 @@ tmp_repo=$(mktemp -d systemds-repo-tmp-XXXXX)
 
 
 # Docs: https://git-scm.com/docs/gitignore
-cat <<EOF >.git/info/exlude
+cat <<EOF >.git/info/exclude
 systemds-repo-tmp-*
 
 EOF
