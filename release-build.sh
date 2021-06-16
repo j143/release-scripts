@@ -162,7 +162,7 @@ if [[ "$1" == "publish-release" ]]; then
       <repositories>
         <repository>
           <id>local-temp</id>
-          <url>${tmp_repo}</url>
+          <url>file://${tmp_repo}</url>
         </repository>
       </repositories>
     </profile>
