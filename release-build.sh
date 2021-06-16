@@ -136,23 +136,9 @@ DEST_DIR_NAME="$PACKAGE_VERSION"
 mkdir temp
 tmp_repo=$(mktemp -d temp/systemds-repo-tmp-XXXXX)
 
-if [[ "$1" == "publish-release" ]]; then
-
-  # cd systemds
+printf "\nRelease version is ${PACKAGE_VERSION} \n"
   
-  # Publishing spark to Maven Central Repo
-  printf "\nRelease version is ${PACKAGE_VERSION} \n"
-  
-  mvn versions:set -DnewVersion=${RELEASE_VERSION}
-
-  if ! is_dry_run; then
-    printf "Creating a Nexus staging repository \n"
-    promote_request="<promoteRequest><data><description>Apache SystemDS</description></data></promoteRequest>"
-    out=$(curl -X POST -d "$promote_request" -u $ASF_USERNAME:$ASF_PASSWORD \
-      -H "Content-Type:application/xml" -v \
-      $NEXUS_ROOT/profiles/$NEXUS_PROFILE/start)
-    staged_repository_id=$(echo $out | sed -e "s/.*\(orgapachesystemds-[0-9]\{4\}\).*/\1/")
-  fi
+mvn versions:set -DnewVersion=${RELEASE_VERSION}
 
   cat <<EOF >../tmp-settings-nexus.xml
 <settings>
@@ -174,9 +160,26 @@ if [[ "$1" == "publish-release" ]]; then
 </settings>
 EOF
 
-  mvn --settings ../tmp-settings-nexus.xml -Pdistribution deploy \
-    -DaltDeploymentRepository=local-temp::default::file:///$PWD/${tmp_repo} \
-    -Daether.checksums.algorithms='SHA-512,SHA-1,MD5'
+mvn --settings ../tmp-settings-nexus.xml -Pdistribution deploy \
+  -DaltDeploymentRepository=local-temp::default::file:///$PWD/${tmp_repo} \
+  -Daether.checksums.algorithms='SHA-512,SHA-1,MD5'
+
+
+if [[ "$1" == "publish-release" ]]; then
+
+  # cd systemds
+  
+  # Publishing SystemDS to Maven Central Repo
+
+  if ! is_dry_run; then
+    printf "Creating a Nexus staging repository \n"
+    promote_request="<promoteRequest><data><description>Apache SystemDS</description></data></promoteRequest>"
+    out=$(curl -X POST -d "$promote_request" -u $ASF_USERNAME:$ASF_PASSWORD \
+      -H "Content-Type:application/xml" -v \
+      $NEXUS_ROOT/profiles/$NEXUS_PROFILE/start)
+    staged_repository_id=$(echo $out | sed -e "s/.*\(orgapachesystemds-[0-9]\{4\}\).*/\1/")
+  fi
+
 
   pushd "${tmp_repo}/org/apache/systemds"
   
@@ -205,6 +208,20 @@ EOF
     printf "\nAfter release vote passes make sure to hit release button.\n"
   fi
     
+
+  popd
+
+  # NOTE: Do not delete any generated release artifacts
+  # rm -rf "${tmp_repo}"
+  eval cd ..
+  exit 0
+fi
+
+
+if [[ "$1" == "publish-apache-dist" ]];
+    
+    pushd "${tmp_repo}/org/apache/systemds"
+
     printf "\n ============== "
     printf "\n Upload artifacts to dist.apache.org \n"
     
@@ -230,11 +247,6 @@ EOF
     eval cd ..
     rm -rf svn-systemds
 
-  popd
-
-  # NOTE: Do not delete any generated release artifacts
-  # rm -rf "${tmp_repo}"
-  eval cd ..
-  exit 0
+    popd
+    exit 0
 fi
-
