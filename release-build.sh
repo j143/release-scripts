@@ -127,8 +127,12 @@ RELEASE_STAGING_LOCATION="https://dist.apache.org/repos/dist/dev/systemds"
 DEST_DIR_NAME="$PACKAGE_VERSION"
 
 # NOTE:
-# Build files will be saved to this folder.
+# 1. Build files will be saved to this folder.
 # This folder will be used by `publish-release`
+# 
+# 2. this directory is passed via `file` protocol with
+#  file:///${path} (3 slashes, specifies empty name)
+#  refer: https://en.wikipedia.org/wiki/File_URI_scheme#How_many_slashes.3F
 mkdir temp
 tmp_repo=$(mktemp -d temp/systemds-repo-tmp-XXXXX)
 
@@ -162,7 +166,7 @@ if [[ "$1" == "publish-release" ]]; then
       <repositories>
         <repository>
           <id>local-temp</id>
-          <url>file://${tmp_repo}</url>
+          <url>file:///$PWD/${tmp_repo}</url>
         </repository>
       </repositories>
     </profile>
@@ -171,7 +175,7 @@ if [[ "$1" == "publish-release" ]]; then
 EOF
 
   mvn --settings ../tmp-settings-nexus.xml -Pdistribution deploy \
-    -DaltDeploymentRepository=local-temp::default::file://${tmp_repo} \
+    -DaltDeploymentRepository=local-temp::default::file:///$PWD/${tmp_repo} \
     -Daether.checksums.algorithms='SHA-512,SHA-1,MD5'
 
   pushd "${tmp_repo}/org/apache/systemds"
