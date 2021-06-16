@@ -129,7 +129,14 @@ DEST_DIR_NAME="$PACKAGE_VERSION"
 # NOTE:
 # Build files will be saved to this folder.
 # This folder will be used by `publish-release`
-tmp_repo=$(mktemp -d target/systemds-repo-tmp-XXXXX)
+tmp_repo=$(mktemp -d systemds-repo-tmp-XXXXX)
+
+
+# Docs: https://git-scm.com/docs/gitignore
+cat <<EOF >.git/info/exlude
+systemds-repo-tmp-*
+
+EOF
 
 if [[ "$1" == "publish-release" ]]; then
 
@@ -177,7 +184,7 @@ EOF
   
   # Name the release candidate folder as x.y.0-rc#
   # This will help keep the candidates separate.
-  mv systemds/${RELEASE_VERSION} systemds/${PACKAGE_VERSION}
+  # mv systemds/${RELEASE_VERSION} systemds/${PACKAGE_VERSION}
 
   if ! is_dry_run; then
     # upload files to nexus repo
@@ -214,7 +221,7 @@ EOF
     # if [[ ! is_dry_run ]]; then
     #   stage_dir=$(mkdir -p svn-systemds/${DEST_DIR_NAME}-temp)
     # else
-      stage_dir=$(mkdir -p svn-systemds/${PACKAGE_VERSION})
+      stage_dir=$(mktemp -d svn-systemds/${PACKAGE_VERSION}-temp-XXXX)
     # fi
 
     printf "\nCopy the release tarballs to svn repo \n"
@@ -223,12 +230,12 @@ EOF
     # Remove extra files generated
     # Keep only .zip, .tgz, and javadoc
     find . -type f | grep -v -e \.zip -e \.tgz -e javadoc | xargs rm
-    cp systemds/${PACKAGE_VERSION}/systemds-* "${stage_dir}"
+    cp systemds/${RELEASE_VERSION}/systemds-* "${stage_dir}"
     svn add "${stage_dir}"
     
-    cd svn-systemds
+    eval cd svn-systemds
     svn ci --username "$ASF_USERNAME" --password "$ASF_PASSWORD" -m"Apache SystemDS $SYSTEMDS_PACKAGE_VERSION" --no-auth-cache
-    cd ..
+    eval cd ..
     rm -rf svn-systemds
 
   popd
