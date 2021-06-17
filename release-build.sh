@@ -211,9 +211,9 @@ EOF
     svn co --depth=empty $RELEASE_STAGING_LOCATION svn-systemds
 
     # if [[ ! is_dry_run ]]; then
-      stage_dir=$(mktemp -d svn-systemds/${DEST_DIR_NAME}-temp-XXXX)
+      # stage_dir=$(mktemp -d svn-systemds/${DEST_DIR_NAME}-temp-XXXX)
     # else
-      # stage_dir=$(mkdir -p svn-systemds/${PACKAGE_VERSION})
+      stage_dir=$(mkdir -p svn-systemds/${PACKAGE_VERSION})
     # fi
 
     printf "\nCopy the release tarballs to svn repo \n"
