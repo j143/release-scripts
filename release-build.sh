@@ -221,7 +221,7 @@ EOF
     
     # Remove extra files generated
     # Keep only .zip, .tgz, and javadoc
-    find . -type f | grep -v -e \.zip -e \.tgz -e javadoc | xargs rm
+    find systemds -type f | grep -v -e \.zip -e \.tgz -e javadoc | xargs rm
     eval cp systemds/${RELEASE_VERSION}/systemds-* "${stage_dir}"
     svn add "${stage_dir}"
     
