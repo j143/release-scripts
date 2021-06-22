@@ -36,4 +36,5 @@ printf "\n checking out $RELEASE_TAG for building artifacts \n"
 run_silent "Publish Release Candidates to the Nexus Repo..." "publish.log" \
     "$SELF/release-build.sh" publish-release
 
-
+run_silent "Publish Release Candidates to the SVN Repo..." "publish.log" \
+    "$SELF/release-build.sh" publish-apache-dist

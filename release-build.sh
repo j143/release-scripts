@@ -222,6 +222,8 @@ if [[ "$1" == "publish-apache-dist" ]];
     
     pushd "${tmp_repo}/org/apache/systemds"
 
+    cp -r systemds/${RELEASE_VERSION} systemds/${PACKAGE_VERSION}
+
     printf "\n ============== "
     printf "\n Upload artifacts to dist.apache.org \n"
     
@@ -239,12 +241,13 @@ if [[ "$1" == "publish-apache-dist" ]];
     # Remove extra files generated
     # Keep only .zip, .tgz, and javadoc
     find . -type f | grep -v -e \.zip -e \.tgz -e javadoc | xargs rm
-    eval cp systemds/${RELEASE_VERSION}/systemds-* "${stage_dir}"
+    cp systemds/${PACKAGE_VERSION}/systemds-* "${stage_dir}"
     svn add "${stage_dir}"
     
-    eval cd svn-systemds
+    cd svn-systemds
+    
     svn ci --username "$ASF_USERNAME" --password "$ASF_PASSWORD" -m"Apache SystemDS $SYSTEMDS_PACKAGE_VERSION" --no-auth-cache
-    eval cd ..
+    cd ..
     rm -rf svn-systemds
 
     popd
