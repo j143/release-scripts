@@ -145,14 +145,14 @@ if [[ "$1" == "publish-release" ]]; then
   
   mvn versions:set -DnewVersion=${RELEASE_VERSION}
 
-  if ! is_dry_run; then
+  # if ! is_dry_run; then
     printf "Creating a Nexus staging repository \n"
     promote_request="<promoteRequest><data><description>Apache SystemDS</description></data></promoteRequest>"
     out=$(curl -X POST -d "$promote_request" -u $ASF_USERNAME:$ASF_PASSWORD \
       -H "Content-Type:application/xml" -v \
       $NEXUS_ROOT/profiles/$NEXUS_PROFILE/start)
     staged_repository_id=$(echo $out | sed -e "s/.*\(orgapachesystemds-[0-9]\{4\}\).*/\1/")
-  fi
+  # fi
 
   cat <<EOF >../tmp-settings-nexus.xml
 <settings>
@@ -181,7 +181,7 @@ EOF
   pushd "${tmp_repo}/org/apache/systemds"
   
 
-  if ! is_dry_run; then
+  # if ! is_dry_run; then
     # upload files to nexus repo
     nexus_upload_id=$NEXUS_ROOT/deployByRepositoryId/$staged_repository_id
     printf "\nUpload files to $nexus_upload_id \n"
@@ -203,7 +203,7 @@ EOF
     printf "Closed Nexus staging repository: $staged_repository_id"
 
     printf "\nAfter release vote passes make sure to hit release button.\n"
-  fi
+  # fi
     
     printf "\n ============== "
     printf "\n Upload artifacts to dist.apache.org \n"
