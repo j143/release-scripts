@@ -110,7 +110,7 @@ check_for_tag() {
 # branch details, snapshot version
 # error validation
 get_release_info() {
-  if [ -z "$GIT_BRANCH" ]; then
+  if [[ -z "$GIT_BRANCH" ]]; then
     # If not branch is specified, find the latest branch from repo
     GIT_BRANCH=$(git ls-remote --heads "$ASF_REPO" |
       awk '{print $2}' |
@@ -142,7 +142,7 @@ get_release_info() {
   #   - If it has, then we're building rc1 of the current version.
   #   - If it has not, we're building the next RC of the previous version.
   local RC_COUNT
-  if [ $REV != 0 ]; then
+  if [[ $REV != 0 ]]; then
     local PREV_REL_REV=$((REV - 1))
     local PREV_REL_TAG="v${SHORT_VERSION}.${PREV_REL_REV}"
 
@@ -173,7 +173,7 @@ get_release_info() {
 
   if check_for_tag "$RELEASE_TAG"; then
     read -p "$RELEASE_TAG already exists. Continue anyway [Y/n]? " ANSWER
-    if [ "$ANSWER" != "Y" ]; then
+    if [[ "$ANSWER" != "Y" ]]; then
       error "Exiting."
     fi
     SKIP_TAG
@@ -189,22 +189,22 @@ get_release_info() {
   # Git configuration info
   # The ASF ID is obtained from
   # https://people.apache.org/phonebook.html?unix=systemds
-  if [ -z "$ASF_USERNAME" ]; then
+  if [[ -z "$ASF_USERNAME" ]]; then
     export ASF_USERNAME=$(read_config "ASF ID" "$LOGNAME")
   fi
 
-  if [ -z "$GIT_NAME" ]; then
+  if [[ -z "$GIT_NAME" ]]; then
     GIT_NAME=$(git config user.name || echo "")
     export GIT_NAME=$(read_config "Full name" "$GIT_NAME")
   fi
 
   # git configuration info
-  if [ -z "$GIT_EMAIL" ]; then
+  if [[ -z "$GIT_EMAIL" ]]; then
     export GIT_EMAIL="$ASF_USERNAME@apache.org"
   fi
   
   # GPG key configuration info
-  if [ -z "$GPG_KEY" ]; then
+  if [[ -z "$GPG_KEY" ]]; then
     export GPG_KEY=$(read_config "GPG key" "$GIT_EMAIL")
   fi
 
@@ -222,8 +222,7 @@ E-MAIL:     $GIT_EMAIL
 ================
 EOF
 
-#   read -p "Is this info correct [Y/n]? " ANSWER
-  if [ -z "$CORRECT_RELEASE_INFO" ]; then
+  if [[ -z "$CORRECT_RELEASE_INFO" ]]; then
     CORRECT_RELEASE_INFO=$(read_config "Is the release info correct (1 for Yes, 0 for No) ?" "$CORRECT_RELEASE_INFO")
   fi
   
@@ -232,11 +231,11 @@ EOF
     exit 1
   fi
 
-  if [ -z "$ASF_PASSWORD" ]; then
+  if [[ -z "$ASF_PASSWORD" ]]; then
     stty -echo && printf "ASF password: " && read ASF_PASSWORD && printf '\n' && stty echo
   fi
 
-  if [ -z "$GPG_PASSPHRASE" ]; then
+  if [[ -z "$GPG_PASSPHRASE" ]]; then
     stty -echo && printf "GPG passphrase: " && read GPG_PASSPHRASE && printf '\n' && stty echo
   fi
 
