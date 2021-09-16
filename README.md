@@ -576,3 +576,13 @@ Semantic versioning is a formal convention for specifying compatibility. It uses
 
 
 major.minor.patch as per [semver.org](http://semver.org)
+
+
+--
+
+## Troubleshooting
+
+1. Why does the command line prompts for the passphrase, even though I have provided it before.
+
+Maven creates a session inside a session in which the credentials might have not been passed to.
+
