@@ -213,7 +213,7 @@ EOF
     # if [[ ! is_dry_run ]]; then
       # stage_dir=$(mktemp -d svn-systemds/${DEST_DIR_NAME}-temp-XXXX)
     # else
-      stage_dir=$(svn-systemds/${PACKAGE_VERSION})
+      stage_dir=svn-systemds/${PACKAGE_VERSION}
       mkdir -p $stage_dir
     # fi
 
