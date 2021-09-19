@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+################################################################################
+##  File:  release-build.sh
+##  Desc:  Create Release artifacts
+################################################################################
+
 SELF=$(cd $(dirname $0) && pwd)
 . "$SELF/release-utils.sh"
 
@@ -44,16 +49,6 @@ fi
 if [[ $@ == *"help"* ]]; then
   exit_with_usage
 fi
-
-dry_run=true
-
-if [[ ! is_dry_run ]]; then
-  dry_run=false
-else
-  dry_run=true
-fi
-
-printf "\n Dry Run?: $dry_run \n"
 
 
 # Build docs (production)
