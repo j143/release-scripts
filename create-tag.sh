@@ -82,15 +82,6 @@ printf "\n -Dgpg.homedir=$GNUPGHOME -Dgpg.keyname=$GPG_KEY -Dgpg.passphrase=$GPG
 # sed -i 's/SYSTEMDS_VERSION:.*$/SYSTEMDS_VERSION: '"$RELEASE_VERSION"'/g' docs/_config.yml
 # and run docs/updateAPI.sh to update version in api docs
 
-dry_run=true
-
-if [[ ! is_dry_run ]]; then
-  dry_run=false
-else
-  dry_run=true
-fi
-
-printf "\n Dry Run?: $dry_run \n"
 
 # NOTE:
 # 
