@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
-# Create release tags and version names
 
-SELF=$(cd $(dirname $0) && pwd)
-. "$SELF/release-utils.sh"
+################################################################################
+##  File:  create-tag.sh
+##  Desc:  Release preparation with Maven Release Plugin
+################################################################################
 
 # https://stackoverflow.com/q/59895
 SELF=$(cd $(dirname $0) && pwd)
@@ -14,16 +15,19 @@ exit_with_usage() {
 usage: $NAME
 
 Tags a SystemDS release on a particular branch.
+
 Inputs are specified with the following environment variables:
+
 ASF_USERNAME - Apache Username
 ASF_PASSWORD - Apache Password
 GIT_NAME - Name to use with git
 GIT_EMAIL - E-mail address to use with git
-GIT_BRANCH - Git branch on which to make release
+GIT_BRANCH - Git branch from which to make release
 RELEASE_VERSION - Version used in pom files for release
 RELEASE_TAG - Name of release tag
 NEXT_VERSION - Development version after release
 EOF
+
   exit 1
 }
 
