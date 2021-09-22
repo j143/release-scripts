@@ -12,9 +12,10 @@ while getopts ":n" opt; do
   esac
 done
 
+DRY_RUN=${DRY_RUN:-0}
+
 # Ask for release information
 get_release_info
-
 
 # tag
 run_silent "Creating release tag $RELEASE_TAG..." "tag.log" \
@@ -23,8 +24,10 @@ run_silent "Creating release tag $RELEASE_TAG..." "tag.log" \
 # run_silent "Publish Release Candidates to the Nexus Repo..." "publish-snapshot.log" \
 #     "$SELF/release-build.sh" publish-snapshot
 
-git checkout $RELEASE_TAG
-printf "\n checking out $RELEASE_TAG for building artifacts \n"
+if ! is_dry_run; then
+  git checkout $RELEASE_TAG
+  printf "\n checking out $RELEASE_TAG for building artifacts \n"
+fi
 
 # NOTE:
 # The following goals publishes the artifacts to

@@ -93,7 +93,12 @@ printf "\n -Dgpg.homedir=$GNUPGHOME -Dgpg.keyname=$GPG_KEY -Dgpg.passphrase=$GPG
 # not propagated to the forked session automatically.
 # 
 
-CMD="mvn --batch-mode -DdryRun=false -Dtag=$RELEASE_TAG release:prepare \
+if is_dry_run; then
+  dry_run=true
+fi
+
+
+CMD="mvn --batch-mode -DdryRun=${dry_run} -Dtag=$RELEASE_TAG release:prepare \
                  -Dresume=false \
                  -DreleaseVersion=$RELEASE_VERSION \
                  -DdevelopmentVersion=$NEXT_VERSION \

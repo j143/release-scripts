@@ -5,7 +5,6 @@
 ##  Desc:  Helper utilities for the release workflow
 ################################################################################
 
-DRY_RUN=${DRY_RUN:-0}
 ASF_REPO="https://github.com/apache/systemds"
 ASF_REPO_CONTENT="https://raw.githubusercontent.com/apache/systemds"
 
@@ -90,7 +89,7 @@ run_silent() {
   
   # 2>&1 https://stackoverflow.com/a/818284
   # 1 stdout, 2 stderr, >& redirect merger operator
-  "$@" 1>"$LOG_FILE" 2>&1
+  . "$@" 1>"$LOG_FILE" 2>&1
   
   # a successful command returns 0 exit code
   local SUCCESS=$?
