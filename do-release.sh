@@ -41,4 +41,7 @@ fi
 run_silent "Publish Release Candidates to the Nexus Repo..." "publish.log" \
     "$SELF/release-build.sh" publish-release
 
-
+if is_dry_run; then
+  # restore the pom.xml file updated during release step
+  git restore pom.xml
+fi
