@@ -14,6 +14,8 @@ done
 
 DRY_RUN=${DRY_RUN:-0}
 
+cleanup_repo
+
 # Ask for release information
 get_release_info
 

@@ -100,9 +100,11 @@ run_silent() {
   fi
 }
 
-# TODO: git clone systemds function
-# https://git-scm.com/docs/git-clean
-# git clean -d -f -x
+# Clean Working directory of untracked files
+cleanup_repo() {
+  # https://git-scm.com/docs/git-clean
+  git clean -d -f -x
+}
 
 # check for the tag name in git repo
 check_for_tag() {
@@ -122,7 +124,8 @@ get_release_info() {
       head -n 1 |
       cut -d/ -f3)
   fi
-
+  
+  printf "\n================\n"
   export GIT_BRANCH=$(read_config "Branch" "$GIT_BRANCH")
 
   # Find the current version for the branch
