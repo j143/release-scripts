@@ -98,12 +98,13 @@ if is_dry_run; then
 fi
 
 
-CMD="mvn --batch-mode -DdryRun=${dry_run} -Dtag=$RELEASE_TAG release:prepare \
+CMD="mvn --batch-mode -DdryRun=${dry_run} -Dtag=$RELEASE_TAG \
                  -Dresume=false \
                  -DreleaseVersion=$RELEASE_VERSION \
                  -DdevelopmentVersion=$NEXT_VERSION \
                  -Dgpg.keyname=${GPG_KEY} -Dgpg.passphrase=${GPG_PASSPHRASE} \
-                 -Darguments=${GPG_OPTS}"
+                 -Darguments=${GPG_OPTS} \
+                 release:prepare"
 
 printf "\n #### Executing command: #### \n"
 printf "\n $(bold $(greencolor $CMD)) \n\n"
