@@ -17,10 +17,7 @@ compromises are to be discussed in private@ or dev@ mail list appropriately.
 
 Install the basic software and procure the required code and dependencies, credentials.
 
-OS Requirement: (One of the following)
-  1. Linux based OS
-  2. Windows Subsystem for Linux (WSL) for Windows 10.
-  3. Mac OS
+OS Requirement: Linux
   
 RAM requirement: 8 GB +
 
@@ -36,7 +33,6 @@ Credential Requirements:
 - GPG passphrase
 - Apache ID and Password
 - GitHub ID and Password
-- DockerHub ID and Password (if applicable)
 - PyPi.org ID and password (if applicable)
 
 
@@ -93,21 +89,15 @@ The regressions are to be informed to the dev@ mailing list, through release dur
 
 ## Release tags or branch
 
-Our git workflow looks as shown in the below diagram:
-
-![git workflow](./git-flow-1.svg)
+Create release branch from the `master` with version named `2.x.0-SNAPSHOT`.
 
 ### The chosen commit for RC
 
 Release candidates are built from single commits off the development branch. Before building,
 the version must be set to a non `SNAPSHOT`/`dev` version.
 
-Here:
-- The master branch is unchanged
-- There is a commit not on the master branch with the version adjusted
-- The RC tag points to that commit
 
-### Inform the team
+### Inform mailing list
 
 Mail dev@systemds.apache.org of the release tags and triage information.
 This list of pending issues will be refined and updated collaboratively.
@@ -119,11 +109,11 @@ This list of pending issues will be refined and updated collaboratively.
 1. Release Manager's GPG key is publised to [dist.apache.org](https://dist.apache.org/repos/dist/release/systemds/KEYS)
 2. Release Manager's GPG key is configured in `git` configuration
 3. Set `JAVA_HOME` to JDK 8
-
+4. `export GNUPGHOME=$HOME/.gnupg`
 
 ### Release build to create a release candidate
 
-1. In the shell, build artifacts and deploy to staging
+1. In the shell, build artifacts and deploy
 
 ```sh
 ./do-release.sh
