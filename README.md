@@ -128,7 +128,7 @@ This list of pending issues will be refined and updated collaboratively.
 Answer the prompts with appropriate details as shown:
 
 ```
-Branch [gh-pages]: master
+Branch [master]: master
 Current branch version is 2.1.0-SNAPSHOT.
 Release [2.1.0]: 
 RC # [1]: 1
@@ -186,7 +186,7 @@ In this directory, clone a copy of the project.
 git clone https://github.com/apache/systemds.git
 ```
 
-## Release candidate build
+## Post Release Publish
 
 ### Checklist
 
@@ -223,106 +223,6 @@ For verification:
 mvn clean verify
 ```
 
-#### 4. Execute all binary
-
-All of the binary artifacts should execute, including the ones packaged
-in other artifacts (in tgz, zip artifacts).
-
-The build artifacts should be downloaded from
-https://dist.apache.org/repos/dist/dev/systemds.
-
-They can tested as follows:
-
-For example, OS X:
-```sh
-# download artifacts
-wget -r -nH -nd -np -R 'index.html*' https://dist.apache.org/repos/dist/dev/systemds
-
-# verify that standalone tgz works
-tar -xvzf systemds-2.1.0-bin.tgz
-cd systemds-2.1.0-bin
-echo "print('I am from SystemDS')" > hello.dml
-./systemds hello.dml
-cd ..
-```
-
-Verify that standalone zip works
-
-```sh
-rm -rf systemds-2.1.0-bin
-unzip systemds-2.1.0-bin.zip
-cd systemds-2.1.0-bin
-echo "print('Trees are our friends')" > hello.dml
-./systemds hello.dml
-cd ..
-```
-
-Verify that src works
-
-```sh
-tar -xvzf systemds-2.1.0-src.tgz
-cd systemds-2.1.0-src
-mvn clean package -P distribution
-cd target/
-java -cp "./lib/*:systemds-2.1.0.jar" org.apache.sysds.api.DMLScript -s "print('hello')"
-
-java -cp "./lib/*:SystemDS.jar" org.apache.sysds.api.DMLScript -s "print('hello')"
-cd ../..
-```
-
-Verify spark batch mode
-
-```sh
-export SPARK_HOME=~/spark
-cd systemds-2.1.0-bin/target/lib
-$SPARK_HOME/bin/spark-submit systemds-2.1.0.jar -s "print('hello')" -exec hybrid_spark
-```
-
-Verify hadoop batch mode
-
-```sh
-hadoop jar systemds-2.1.0.jar -s "print('hello')"
-```
-
-Verify python artifact
-
-```sh
-# install numpy, pandas, scipy & set SPARK_HOME
-pip install numpy pandas scipy
-export SPARK_HOME=~/spark
-
-# open interactive python shell
-python
-
-import systemds as sds
-import numpy as np
-m1 = sml.matrix(np.ones((3,3)) + 2)
-m2 = sml.matrix(np.ones((3,3)) + 3)
-m2 = m1 * (m2 + m1)
-m4 = 1.0 - m2
-m4.sum(axis=1).toNumPy()
-
-```
-
-The output would be
-
-```out
-array([[-60.],
-       [-60.],
-       [-60.]])
-```
-
-### Python Tests
-
-TODO: manual python tests
-
-For example,
-
-```sh
-# this command may not work.
-spark-submit --driver-class-path SystemDS.jar test_matrix_agg_fn.py
-```
-
 
 ### LICENSE and NOTICE
 
@@ -335,6 +235,7 @@ For more information, see:
 
 1. http://www.apache.org/dev/#releases
 2. http://www.apache.org/dev/licensing-howto.html
+
 
 ### Build src artifact and verify
 
@@ -371,9 +272,6 @@ cd ..
 
 Also check for Hadoop, and spark
 
-#### Notebooks
-
-Verify that the notebooks run correctly.
 
 #### Performance suite
 
@@ -490,7 +388,7 @@ public and secret key created and signed.
 
 3. Export the environmental variable
 
-Note: Use `sudo` on requirement.
+Note: Using `sudo` would add credentials in root users
 
 ```sh
 export GNUPGHOME=/usr/local/.gnupg
@@ -499,76 +397,3 @@ gpg --homedir $GNUPGHOME --list-keys
 gpg --homedir $GNUPGHOME --list-secret-keys
 ```
 
-#### Maven password encryption
-
-Follow the instructions at [encryption guide](https://maven.apache.org/guides/mini/guide-encryption.html)
-
-```sh
-mvn --encrypt-master-password
-```
-
-This commands produces an output as encrypted version of the password
-```output
-{jSMOWnoPFgsHVpMvz5VrIt5kRbzGpI8u+9EF1iFQyJQ=}
-```
-
-Store this password in `${user.home}/.m2/settings-security.xml`; it
-should look like
-
-```xml
-<settingsSecurity>
-  <master>{jSMOWnoPFgsHVpMvz5VrIt5kRbzGpI8u+9EF1iFQyJQ=}</master>
-</settingsSecurity>
-```
-
-Create an Encrypted version of the Apache Password
-
-```sh
-mvn --encrypt-password
-```
-
-Add a server entry to `~/.m2/settings.xml` file (create this file if
-it doesn't already exist). This server entry will have the Apache
-Snapshot ID, your Apache ID, and your encrypted password.
-
-```sh
-<settings>
-  <servers>
-    <server>
-      <id>apache.snapshots.systemds</id>
-      <username>APACHE_ID</username>
-      <password>{COQLCE6DU6GtcS5P=}</password>
-    </server>
-  </servers>
-</settings>
-```
-
-Note: editing `settings.xml` and running the above commands can still
-leave your password stored locally in plaintext. You may want to check
-the following locations:
-
-  - Shell history (eg. run `history`). Even best clear command line
-    history after encrypting the above passwords.
-  - Editor caches (eg. `~/.viminfo`)
-
-
-## Submit your GPG public key to a Public key server
-
-Use [MIT PGP Public Key Server](http://pgp.mit.edu:11371/) or [key server at `ubuntu.com`](https://keyserver.ubuntu.com/)
-at your convenience.
-
-The versioning scheme is as follows.
-
-### Semantic versioning
-
-Semantic versioning is a formal convention for specifying compatibility. It uses a three-part version number: **major version**; **minor version**; and **patch**.  Version numbers  convey meaning about the underlying code and what has been modified. For example, versioning could be handled as follows:
-
-| Code status  | Stage  | Rule  | Example version  |
-|---|---|---|---|
-| First release  | New product  | Start with 1.0.0  | 1.0.0  |
-| Backward compatible fix  | Patch release  | Increment the third digit  | 1.0.1  |
-| Backward compatible new feature  | Minor release  | Increment the middle digit and reset the last digit to zero  | 1.1.0  |
-| Breaking updates | Major release | Increment the first digit and reset the middle and last digits to zero | 2.0.0 |
-
-
-major.minor.patch as per [semver.org](http://semver.org)
