@@ -113,6 +113,12 @@ This list of pending issues will be refined and updated collaboratively.
 
 ### Release build to create a release candidate
 
+0. Dry run the release build
+
+```sh
+./do-release.sh -n
+```
+
 1. In the shell, build artifacts and deploy
 
 ```sh
